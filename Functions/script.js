@@ -214,3 +214,210 @@ book.apply(swiss, flightData);
 console.log(swiss);
 //this apply method is not that used anymore in modern JS, because we now have another way of doing the exact same thing
 book.call(swiss, ...flightData); //still same as saying book.call(swiss, 583, 'George Cooper")
+
+//THE BIND METHOD
+//The method also allow us to manually set the this keyword for any function call. The diff is that bind does not immiediately call the function, instead it returns a new function where the this keyword is bound-it's set to whatever value we pass into bind.
+
+const bookEW = book.bind(euroWings); //This will not call the book function, instaed it would return a new function where the this keyword alwys be set to euroWings
+const bookLH = book.bind(lufthansa);
+const bookLX = book.bind(swiss);
+
+bookEW(23, 'Steven Williams'); //we no longer need to set the this keyword here. Its been done above
+
+const bookEW23 = book.bind(euroWings, 23); //We passed in flightNum parameter here
+// const bookEW23 = book.bind(euroWings, 23, 'Jonas');// we could also do this. it would ignore the names called belo
+bookEW23('Jonas Schmedtmann'); //We passed in name parameter here
+bookEW23('Martha Cooper');
+//Bind method allows us to set in stone certain arguments, and the resulting function becomes simpler. Above we used the bind method to specify part of the argument beforehand....this is called partial application. PARTIAL APPLICATION simply means that a part of the arugument of the original function are already set
+
+//Other situations to use the bind method;
+//When we use objects together with event listeners
+lufthansa.planes = 300;
+lufthansa.buyPlane = function () {
+
+    console.log(this);
+    this.planes++;
+    console.log(this.planes);
+};
+// lufthansa.buyPlane();
+document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane.bind(lufthansa));
+//the this keyword is pointing to the button, so it wont perform the function we want it. In order for it to point to the lufthansa obj, we need to manually define the this keyword inside lufthansa.buyPlane in the addEventListener. We would pass in a function on lufthansa.buyPlane but not call it...we use bind for it; lufthansa.buyPlane.bind(lufthansa)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
