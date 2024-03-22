@@ -157,7 +157,7 @@ const person = function (name) {
 person(`Jane`)('girl');
 person(`Toby`)('boy');
 person(`Austine`)('child');
-person(`Georgia`)('woman'); */
+person(`Georgia`)('woman'); 
 
 //The call and apply methods
 const lufthansa ={
@@ -191,7 +191,7 @@ bookings: [],
 const book = lufthansa.book;
 //book(23, 'Sarah Williams'); //does not work...points to undefined
 
-/*But what if we want to call the function on EW or LH, how do we tell JS manually what the this keyword should look like. There are THREE (3) methods to do that. They are called; call, apply, and bind {these are all METHODS of function}*/
+/*But what if we want to call the function on EW or LH, how do we tell JS manually what the this keyword should look like. There are THREE (3) methods to do that. They are called; call, apply, and bind {these are all METHODS of function}*
 //CALL METHOD: To apply this method on either of the 2 objects;
 book.call(euroWings, 23, 'Sarah Williams');
 console.log(euroWings);
@@ -225,7 +225,7 @@ const bookLX = book.bind(swiss);
 bookEW(23, 'Steven Williams'); //we no longer need to set the this keyword here. Its been done above
 
 const bookEW23 = book.bind(euroWings, 23); //We passed in flightNum parameter here
-// const bookEW23 = book.bind(euroWings, 23, 'Jonas');// we could also do this. it would ignore the names called belo
+// const bookEW23 = book.bind(euroWings, 23, 'Jonas');// we could also do this. it would ignore the names called below
 bookEW23('Jonas Schmedtmann'); //We passed in name parameter here
 bookEW23('Martha Cooper');
 //Bind method allows us to set in stone certain arguments, and the resulting function becomes simpler. Above we used the bind method to specify part of the argument beforehand....this is called partial application. PARTIAL APPLICATION simply means that a part of the arugument of the original function are already set
@@ -236,13 +236,190 @@ lufthansa.planes = 300;
 lufthansa.buyPlane = function () {
 
     console.log(this);
-    this.planes++;
+    this.planes++; //NO of  plane increases each time the btn is clicked
     console.log(this.planes);
 };
 // lufthansa.buyPlane();
 document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane.bind(lufthansa));
 //the this keyword is pointing to the button, so it wont perform the function we want it. In order for it to point to the lufthansa obj, we need to manually define the this keyword inside lufthansa.buyPlane in the addEventListener. We would pass in a function on lufthansa.buyPlane but not call it...we use bind for it; lufthansa.buyPlane.bind(lufthansa)
 
+//PARTIAL APPLICATION means that we can preset parameters
+const addTax = (rate, value) => value + value * rate; //general function for adding tax
+console.log( addTax(0.1, 200));
+
+const addVAT = addTax.bind(null, 0.23); //we dont care about the this keyword here so we use null. We could still use addTax
+// addVAT = value => value + value * 0.23; (same as above)
+
+console.log(addVAT(100));
+console.log(addVAT(23));
+
+// function returner(rate) {
+    
+//     return function(value){
+//       console.log(value + value * rate); 
+//     }
+// };
+
+// returner(0.1)(100)   OR
+function addTaxRate (rate){
+    return function (value) {
+        return value + value * rate;
+    };
+};
+const addVAT2 = addTaxRate(0.23);
+console.log(addVAT2(100));
+console.log(addVAT2(23)); */
+
+
+// Coding Challenge #1
+/* 
+Let's build a simple poll app!
+
+A poll has a question, an array of options from which people can choose, and an array with the number of replies for each option. This data is stored in the starter object below.
+
+Here are your tasks:
+
+1. Create a method called 'registerNewAnswer' on the 'poll' object. The method does 2 things:
+  1.1. Display a prompt window for the user to input the number of the selected option. The prompt should look like this:
+        What is your favourite programming language?
+        0: JavaScript
+        1: Python
+        2: Rust
+        3: C++
+        (Write option number)
+  
+  1.2. Based on the input number, update the answers array. For example, if the option is 3, increase the value AT POSITION 3 of the array by 1. Make sure to check if the input is a number and if the number makes sense (e.g answer 52 wouldn't make sense, right?)
+2. Call this method whenever the user clicks the "Answer poll" button.
+3. Create a method 'displayResults' which displays the poll results. The method takes a string as an input (called 'type'), which can be either 'string' or 'array'. If type is 'array', simply display the results array as it is, using console.log(). This should be the default option. If type is 'string', display a string like "Poll results are 13, 2, 4, 1". 
+4. Run the 'displayResults' method at the end of each 'registerNewAnswer' method call.
+
+HINT: Use many of the tools you learned about in this and the last section 😉
+
+BONUS: Use the 'displayResults' method to display the 2 arrays in the test data. Use both the 'array' and the 'string' option. Do NOT put the arrays in the poll object! So what shoud the this keyword look like in this situation?
+
+BONUS TEST DATA 1: [5, 2, 3]
+BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
+
+GOOD LUCK 😀
+*
+
+const poll = {
+   question: 'What is your favourite programming language?',
+   options: [`0: JavaScript`, `1: Phython`, `2: Rust`, `3: C++`],
+   answers: new Array(4).fill(0),
+
+    registerNewAnswer(){
+        //Get the answer
+const answer = Number(
+    prompt(`${this.question}\n${this.options.join('\n')});\n(Write option number)`)
+);
+
+console.log(answer);
+// typeof answer === 'number' && answer < this.answers.length && this.answers[answer]++;
+
+ //Register Answer
+if (typeof answer === 'number' && answer < this.answers.length) {
+    this.answers[answer]++
+
+    this.displayResults();
+    this.displayResults('string');
+}
+        },
+       
+        //displayResults
+        displayResults(type = 'array'){
+            if (type === 'array') {
+                console.log(this.answers);
+            }else if (type === 'string') {
+                console.log(`Poll Results are ${this.answers.join(', ')}`);
+            }
+        }
+       
+
+
+    
+};
+
+// poll.registerNewAnswer();
+document.querySelector('.poll').addEventListener('click', poll.registerNewAnswer.bind(poll));
+
+poll.displayResults.call({answers: [5, 2, 3]},'string')
+
+
+// BONUS TEST DATA 1: [5, 2, 3]
+// BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
+*/
+
+
+// //IMMEDIATELY INVOKED FUNCTION EXPRESSIONS(IIFE)
+// //These are functions that disappear after they have been called once
+// const runOnce = function () {
+//     console.log('This will never run again');
+// };
+// runOnce();
+ 
+// //WAYS OF WRITING IIFE
+// (function (){
+//     console.log('This will never run again');
+// })();
+// //also works for  arrow functions
+// (() => console.log('This also wil never run again'))();
+
+
+/* 
+// CLOSURES
+//They are not something we create,,it happens auutomatically and we just have to recognise it
+//We can simply say that a closure makes a function remember all the variables that existed in the functions birthplace
+const secureBooking = function () {
+    let passengerCount = 0;
+
+    return function () {
+        passengerCount++;
+        console.log(`${passengerCount} passengers`);
+    }
+}
+
+
+// secureBooking()();
+
+const booker = secureBooking();
+booker();
+booker();
+booker();
+booker();
+// secureBooking()();
+//Secret of closures: any function always have access to the variable environment of the execution context in which the function was created
+
+//In the case of booker, the function was born in the execution context(EC) of secureBooking which was popped off the stack prev. Therefore, the EC will  get access to the variable environment which contains the passengerCount variable, And this is how the booker will be able to read and manipulate the passengerCount variable. This connection is called CLOSURE. A function always has access to the variable environment(VE) of the EC in which it was created even after that EC is gone.
+//The closure is basically the VE attached too the function, exactly as it was at the time and place the function was created  
+console.dir(booker);
+*/
+
+
+//MORE ON CLOSURES
+let f;
+
+const g = function () {
+    const a = 23;
+    f = function () {
+        console.log(a * 2);
+    };
+};
+const h = function () {
+    const b = 777;
+    f = function () {
+        console.log(b * 2);
+    }
+}
+
+
+g();
+f();
+
+//Re-assigning f function
+h();
+f(); //closed over the VE of h
+console.dir(f)
 
 
 
@@ -262,6 +439,53 @@ document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane.bind
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Coding Challenge #2
+
+/* 
+This is more of a thinking challenge than a coding challenge 🤓
+
+Take the IIFE below and at the end of the function, attach an event listener that changes the color of the selected h1 element ('header') to blue, each time the BODY element is clicked. Do NOT select the h1 element again!
+
+And now explain to YOURSELF (or someone around you) WHY this worked! Take all the time you need. Think about WHEN exactly the callback function is executed, and what that means for the variables involved in this example.
+
+GOOD LUCK 😀
+*/
+
+/*
+(function () {
+  const header = document.querySelector('h1');
+  header.style.color = 'red';
+
+  document.querySelector('body').addEventListener('click', function () {
+    header.style.color = 'blue';
+  });
+})();
+*/
 
 
 
