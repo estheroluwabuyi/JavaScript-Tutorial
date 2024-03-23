@@ -397,6 +397,7 @@ console.dir(booker);
 
 
 //MORE ON CLOSURES
+//Example 1
 let f;
 
 const g = function () {
@@ -405,6 +406,7 @@ const g = function () {
         console.log(a * 2);
     };
 };
+
 const h = function () {
     const b = 777;
     f = function () {
@@ -415,50 +417,30 @@ const h = function () {
 
 g();
 f();
+console.dir(f)
 
 //Re-assigning f function
 h();
 f(); //closed over the VE of h
 console.dir(f)
 
+//Example 1
+const boardPassengers = function (n, wait) {
+    const perGroup = n / 3;
 
+    setTimeout(function () {
+        console.log(`We are now boarding all ${n} passengers`);
+        console.log(`There are 3 groups, each with ${perGroup} passengers`);
+}, wait * 1000);
 
+    console.log(`Will start boarding in ${wait} seconds`); //this would be called immiediately and not wait for the setTimeout function to be executed
+    
+};
 
+const perGroup = 1000;//the function will only use this if the pergroup is  not defined inside the function
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+boardPassengers(180, 3);
+//SettimeOut is a good example, because it executed independently. Although boardPassengers has finished execution, the setTimeOut function still got executed.
 
 
 
@@ -476,7 +458,7 @@ And now explain to YOURSELF (or someone around you) WHY this worked! Take all th
 GOOD LUCK 😀
 */
 
-/*
+
 (function () {
   const header = document.querySelector('h1');
   header.style.color = 'red';
@@ -485,7 +467,7 @@ GOOD LUCK 😀
     header.style.color = 'blue';
   });
 })();
-*/
+
 
 
 
