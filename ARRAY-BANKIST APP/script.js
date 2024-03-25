@@ -67,7 +67,65 @@ console.log('jonas'.at(0));
 console.log('jonas'.at(-1));
 */
 
-//The forEach method
+//Looping Arrays: The forEach method
+//forof method
 const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+for (const movement of movements) {
+    if (movement > 0) {
+        console.log(`You deposited ${movement}`);
+    }else{
+        console.log(`You withdrew ${Math.abs(movement)}`);
+    }
+}
 
 
+console.log('-------FOREACH METHOD---------');
+//forEach method
+movements.forEach(function (movement) {
+    if (movement > 0) {
+        console.log(`You deposited ${movement}`);
+    }else{
+        console.log(`You withdrew ${Math.abs(movement)}`);
+    } 
+});
+
+//Accessing counter varaiable...accessing currnt index in forof loop
+//In the forof we'd say;
+for (const [i,movement] of movements.entries()) {
+    if (movement > 0) {
+        console.log(`Movement ${i + 1}: You deposited ${movement}`);
+    }else{
+        console.log(`Movement ${i + 1}: You withdrew ${Math.abs(movement)}`);
+    }
+};
+
+
+console.log('-------FOREACH METHOD---------');
+//in foreach we'd say
+movements.forEach(function(mov, i, arr) {
+    if (mov > 0) {
+        console.log(`Movement ${i + 1}: You deposited ${mov}`);
+    }else{
+        console.log(`Movement ${i + 1}: You withdrew ${Math.abs(mov)}`);
+    }
+}); 
+
+//FOREACH WITH MAPS AND SETS
+//MAP
+const currencies = new Map([
+['USD', 'United States dollar'],
+['EUR', 'Euro'],
+['GBP', 'Pound Sterling']
+]);
+
+currencies.forEach(function (value, key, map){
+    console.log(`${key}: ${value}`);
+});
+//where key is the 'key' and value is the 'value'
+
+//SET
+const currenciesUnique = new Set(['USD', 'GBP', 'USD', 'EUR', 'EUR']);
+console.log(currenciesUnique);
+currenciesUnique.forEach(function (value, _, map) {
+    console.log(`${value}: ${value}`);
+})
