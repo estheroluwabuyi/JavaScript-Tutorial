@@ -150,3 +150,30 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
+const checkDogs = function (dogsJulia, dogsKate) {
+    const dogsJuliaCorrected = dogsJulia.slice();
+    dogsJuliaCorrected.splice(0,1);
+    dogsJuliaCorrected.splice(-2);
+
+    //dogsJuliaCorrected.splice(1,3);...youd still get same result
+   const dogs = dogsJuliaCorrected.concat(dogsKate);
+   console.log(dogs);
+
+
+dogs.forEach(function(dog, i) {
+    dog >= 3 ?  console.log(`Dog number ${i + 1} is an adult, and is ${dog} years old.`) : console.log(`Dog number ${i + 1} is a puppy, and is ${dog} years old.`);
+
+// if (dog >= 3) {
+//     console.log(`Dog number ${i + 1} is an adult and is ${dog} years old.`);
+// } else {
+//     console.log(`Dog number ${i + 1} is a puppy and is ${dog} years old.`);  
+// }
+});
+
+};
+
+checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
+console.log('------------SECOND TEST DATA------------');
+checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+
+//DATA TRANSFORMATIONS; MAP, FILTER, REDUCE
