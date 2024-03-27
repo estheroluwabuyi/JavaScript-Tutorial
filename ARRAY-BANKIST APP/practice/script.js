@@ -1,3 +1,4 @@
+
 'Use strict';
 /*
 //Simple Array Methods
@@ -149,7 +150,7 @@ TEST DATA 1: Julia's data [3, 5, 2, 12, 7], Kate's data [4, 1, 15, 8, 3]
 TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
-*/
+
 const checkDogs = function (dogsJulia, dogsKate) {
     const dogsJuliaCorrected = dogsJulia.slice();
     dogsJuliaCorrected.splice(0,1);
@@ -174,6 +175,43 @@ dogs.forEach(function(dog, i) {
 
 checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
 console.log('------------SECOND TEST DATA------------');
-checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]); */
 
 //DATA TRANSFORMATIONS; MAP, FILTER, REDUCE
+//MAP METHOD
+const eurToUsd = 1.1;
+const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// const movementsUSD = movements.map(function (mov){
+// return mov * eurToUsd;
+// // return 23;
+// });
+
+//Arrow function
+//const movementsUSD = movements.map(mov => Math.trunc(mov * eurToUsd));
+const movementsUSD = movements.map(mov => mov * eurToUsd);
+console.log(movements);
+console.log(movementsUSD);
+
+//Writing same thing using the forof loop
+const movementsUSDfor = [];
+for (const mov of movements) {
+    movementsUSDfor.push(mov * eurToUsd)
+};
+console.log(movementsUSDfor);
+
+// for (const mov of movements) {
+//     console.log(mov * eurToUsd);
+// }
+
+//MAP METHODS ALSO HAVE ACCESS TO THE EXACT SAME 3 PARAM JUST LIKE THE FOREACH METHOD
+const movementDescriptions = movements.map(function (mov, i){
+    return `Movement ${i + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(mov)}`
+
+    // if (mov > 0) {
+    //     return`Movement ${i + 1}: You deposited ${mov}`;
+    // }else{
+    //     return`Movement ${i + 1}: You withdrew ${Math.abs(mov)}`;
+    // }
+});
+console.log(movementDescriptions);
