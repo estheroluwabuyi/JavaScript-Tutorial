@@ -80,11 +80,8 @@ const type = mov > 0 ? 'deposit' : 'withdrawal';
         </div>
    `
    containerMovements.insertAdjacentHTML("afterbegin", html);
-  });
-};
 
-displayMovements(account1.movements);
-// console.log(containerMovements.innerHTML); //you'd see all of the html you have created
+   // console.log(containerMovements.innerHTML); //you'd see all of the html you have created
 
  /* <div class="movements__row">
 <div class="movements__type movements__type--deposit">2 deposit</div>
@@ -92,25 +89,33 @@ displayMovements(account1.movements);
 <div class="movements__value">4 000€</div>
 </div>
  */
+  });
+};
+
+displayMovements(account1.movements);
+
+//Using the reduce method to calculate and print the sum of the balance
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((accu, mov) => accu + mov, 0);
+
+  labelBalance.textContent = `${balance}₤`;
+};
+calcDisplayBalance(account1.movements);
 
 
+//Computing UserName
+const createUsernames = function (accs) {
+accs.forEach(function (acc) {
+ acc.username = acc.owner
+  .toLowerCase()
+  .split(' ')
+  .map(name => name[0])
+  .join('');
+});
+// const username = user.toLowerCase().split(' ').map(function(name) {
+//   return name[0];
+// }).join('');
+};
 
-
-
-
-
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
-
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
-
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-/////////////////////////////////////////////////
+console.log(createUsernames(accounts));
+console.log(accounts);

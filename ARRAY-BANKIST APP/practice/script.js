@@ -214,7 +214,7 @@ const movementDescriptions = movements.map(function (mov, i){
     //     return`Movement ${i + 1}: You withdrew ${Math.abs(mov)}`;
     // }
 });
-console.log(movementDescriptions); */
+console.log(movementDescriptions);
 
 
 //The Filter Method
@@ -233,3 +233,35 @@ console.log(withdrawals);
 //ARROW FUNCTION
 // const withdrawals = movements.filter(mov => mov < 0);
 // console.log(withdrawals);
+*/
+
+//THE REDUCE METHOD
+/*The reduce method takes 4 params instead of the normal 3. The first argument is called the accumulator. Second is the current element, third is the index, and the last is the entire array. We can say that the accumulator is like a snowball that keeps getting bigger as it rolld down the hill. Accumulator is the vallue that we'd keep adding to,
+The reduce method also takes in a ssecond argument called the initial value of the accumulator. The value that we specify in the secnd argument is the initiial value of the accumulator in the first loop iteration. In the case above, we want to start adding at zero, so therefore we simply specify zero as the second argument */
+
+const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements);
+// const balance = movements.reduce(function(accu, cur, i, arr){
+//     console.log(`Iteration ${i}: ${accu}`);
+// return accu + cur;
+// }, 0);
+
+//ARROW FUNCTION
+const balance = movements.reduce((accu, cur) =>
+ accu + cur, 0);
+console.log(balance);
+
+//Doing the same thing with the FOROF LOOP;
+let balance2 = 0;
+for (const mov of movements)  balance2 += mov;
+console.log(balance2);
+
+//We can use the reduce method method to do other stuff rather than getting the total value
+//Getting Max Value
+const max = movements.reduce((accu, mov) =>{
+if (accu > mov)
+return accu;
+else
+return mov;
+}, movements[0]);
+console.log(max);
