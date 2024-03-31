@@ -76,7 +76,7 @@ const type = mov > 0 ? 'deposit' : 'withdrawal';
    <div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type}
           </div>
-          <div class="movements__value">${mov}</div>
+          <div class="movements__value">${mov}€</div>
         </div>
    `
    containerMovements.insertAdjacentHTML("afterbegin", html);
@@ -94,13 +94,40 @@ const type = mov > 0 ? 'deposit' : 'withdrawal';
 
 displayMovements(account1.movements);
 
+
 //Using the reduce method to calculate and print the sum of the balance
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((accu, mov) => accu + mov, 0);
 
-  labelBalance.textContent = `${balance}₤`;
+  labelBalance.textContent = `${balance}€`;
 };
 calcDisplayBalance(account1.movements);
+
+
+//Calculating Stats
+const calcDisplaySummary = function(movements){
+const incomes = movements
+.filter(mov => mov > 0)
+.reduce((acc, mov) => acc + mov, 0);
+labelSumIn.textContent = `${incomes}€`
+
+const outgoing = movements
+.filter(mov => mov < 0)
+.reduce((acc, mov) => acc + mov, 0);
+labelSumOut.textContent = `${Math.abs(outgoing)}€`;
+
+const interest = movements
+.filter(mov => mov > 0)
+.map(deposit => deposit * 1.2/100)
+.filter((int, i, arr) => {
+  console.log(arr);
+  return int >= 1;
+  //only the filtered ints here will make it to the .reduce
+})
+.reduce((acc, int) => acc + int, 0);
+labelSumInterest.textContent = `${interest}€`
+};
+calcDisplaySummary(account1.movements);
 
 
 //Computing UserName
@@ -116,6 +143,16 @@ accs.forEach(function (acc) {
 //   return name[0];
 // }).join('');
 };
-
-console.log(createUsernames(accounts));
 console.log(accounts);
+// console.log(createUsernames(accounts));
+
+//THE FIND METHOD
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
+
+//USING THE FOROF LOOP TO ACHIEVE SAME THING
+for (const account of accounts) {
+  if (account.owner === 'Jessica Davis') {
+    console.log(account);
+  }
+};
