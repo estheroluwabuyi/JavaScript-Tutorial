@@ -92,67 +92,138 @@ const type = mov > 0 ? 'deposit' : 'withdrawal';
   });
 };
 
-displayMovements(account1.movements);
-
 
 //Using the reduce method to calculate and print the sum of the balance
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((accu, mov) => accu + mov, 0);
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((accu, mov) => accu + mov, 0);
 
-  labelBalance.textContent = `${balance}€`;
+  labelBalance.textContent = `${acc.balance}€`;
 };
-calcDisplayBalance(account1.movements);
+
 
 
 //Calculating Stats
-const calcDisplaySummary = function(movements){
-const incomes = movements
+const calcDisplaySummary = function(acc){
+const incomes = acc.movements
 .filter(mov => mov > 0)
 .reduce((acc, mov) => acc + mov, 0);
 labelSumIn.textContent = `${incomes}€`
 
-const outgoing = movements
+const outgoing = acc.movements
 .filter(mov => mov < 0)
 .reduce((acc, mov) => acc + mov, 0);
 labelSumOut.textContent = `${Math.abs(outgoing)}€`;
 
-const interest = movements
+const interest =acc.movements
 .filter(mov => mov > 0)
-.map(deposit => deposit * 1.2/100)
+.map(deposit => deposit * acc.interestRate / 100)
 .filter((int, i, arr) => {
-  console.log(arr);
+  //console.log(arr);
   return int >= 1;
   //only the filtered ints here will make it to the .reduce
 })
 .reduce((acc, int) => acc + int, 0);
 labelSumInterest.textContent = `${interest}€`
 };
-calcDisplaySummary(account1.movements);
+
 
 
 //Computing UserName
 const createUsernames = function (accs) {
-accs.forEach(function (acc) {
- acc.username = acc.owner
-  .toLowerCase()
-  .split(' ')
-  .map(name => name[0])
-  .join('');
-});
-// const username = user.toLowerCase().split(' ').map(function(name) {
-//   return name[0];
-// }).join('');
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+    .toLowerCase()
+    .split(' ')
+    .map(name => name[0])
+    .join('');
+  })
 };
-console.log(accounts);
-// console.log(createUsernames(accounts));
 
-//THE FIND METHOD
-const account = accounts.find(acc => acc.owner === 'Jessica Davis');
-console.log(account);
+createUsernames(accounts);
+// //THE FIND METHOD
+// const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
 
-//USING THE FOROF LOOP TO ACHIEVE SAME THING
-for (const account of accounts) {
-  if (account.owner === 'Jessica Davis') {
-    console.log(account);
+// //USING THE FOROF LOOP TO ACHIEVE SAME THING
+// for (const account of accounts) {
+//   if (account.owner === 'Jessica Davis') {
+//     console.log(account);
+//   }
+// };
+
+const updateUI = function(acc) {
+    //Display movements
+displayMovements(acc.movements);
+
+//Display balance
+calcDisplayBalance(acc);
+
+//Display Summary
+calcDisplaySummary(acc)
+};
+
+
+//EVENT HANDLERS
+let currentAcc;
+btnLogin.addEventListener('click', function (e) {
+  //Prevent Form From Submitting
+  e.preventDefault();
+ 
+  currentAcc = accounts.find(acc => acc.username === inputLoginUsername.value);
+  console.log(currentAcc);
+
+  if (currentAcc?.pin === Number(inputLoginPin.value)) {
+    //Display UI and welcome message
+labelWelcome.textContent = `Welcome back, ${currentAcc.owner.split(' ')[0]}`;
+containerApp.style.opacity = 100;
+
+//clearing input field
+inputLoginUsername.value = inputLoginPin.value = '';
+inputLoginPin.blur();
+/*
+same as;
+inputLoginUsername.value = '';
+inputLoginPin.value = '';
+The above works because operator works from right to left; from ['' =] to [= inputLoginUsernamevalue]
+*/ 
+
+//Update UI
+updateUI(currentAcc)
   }
-};
+});
+
+//IMPLEMENTING TRANSFERS
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find( acc => acc.username === inputTransferTo.value);
+
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  console.log(amount, receiverAcc);
+  if(amount > 0 && 
+   receiverAcc && 
+    currentAcc.balance >= amount && 
+    receiverAcc?.username !== currentAcc.username){
+      //Doing the transfer
+currentAcc.movements.push(-amount);
+receiverAcc.movements.push(amount);
+
+//Update UI
+updateUI(currentAcc)
+  }
+});
+
+
+//THE FINDINDEX METHOD
+btnClose.addEventListener('click', function (e){
+e.preventDefault();
+console.log('Delete');
+
+if (inputCloseUsername.value === currentAcc.username && Number(inputClosePin.value) === currentAcc.pin) {
+  
+const index = accounts.findIndex(acc => acc.username === currentAcc.username)
+  accounts.splice(index, 1);
+  console.log(index);
+}
+});
