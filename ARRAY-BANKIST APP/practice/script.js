@@ -42,7 +42,7 @@ console.log([...arr, ...arr2]); //Spread Operator..we'll get same result as conc
 console.log(letters.join(' + ')); 
 
 //SORT method
-//used to sort the elements of an array in place and returns the sorted array. By default, it sorts the array alphabetically/lexicolographically when applied to strings or numerically when applied to numbers
+//used to sort the elements of an array in place and returns the sorted array. By default, it sorts the array alphabetically/lexicographically when applied to strings or numerically when applied to numbers
 const fruits = ['banana', 'apple', 'orange', 'grape'];
 fruits.sort();
 console.log(fruits);// output: ['apple', 'banana', 'grape', 'orange']
@@ -236,8 +236,8 @@ console.log(withdrawals);
 */
 
 //THE REDUCE METHOD
-/*The reduce method takes 4 params instead of the normal 3. The first argument is called the accumulator. Second is the current element, third is the index, and the last is the entire array. We can say that the accumulator is like a snowball that keeps getting bigger as it rolld down the hill. Accumulator is the vallue that we'd keep adding to,
-The reduce method also takes in a ssecond argument called the initial value of the accumulator. The value that we specify in the secnd argument is the initiial value of the accumulator in the first loop iteration. In the case above, we want to start adding at zero, so therefore we simply specify zero as the second argument 
+/*The reduce method takes 4 params instead of the normal 3. The first argument is called the accumulator. Second is the current element, third is the index, and the last is the entire array. We can say that the accumulator is like a snowball that keeps getting bigger as it rolled down the hill. Accumulator is the value that we'd keep adding to,
+The reduce method also takes in a second argument called the initial value of the accumulator. The value that we specify in the second argument is the initial value of the accumulator in the first loop iteration. In the case above, we want to start adding at zero, so therefore we simply specify zero as the second argument 
 
 const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 console.log(movements);
@@ -364,17 +364,45 @@ GOOD LUCK 😀
  console.log(avg1, avg2); */
 
 //THE FIND METHOD
+// const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// const firstWithdrawal = movements.find(mov => mov < 0);
+// console.log(movements);
+// console.log(firstWithdrawal);
+
+
+//SOME AND EVERY METHODS
+//SOME METHOD
 const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-const fiirstWithdrawal = movements.find(mov => mov < 0);
-console.log(movements);
-console.log(fiirstWithdrawal);
 
+//includes method
+console.log(movements.includes(-130)); //checks for equality
+//Includes method tests for equality. checks if the value inserted is present in an array. But what if we wanted to test for a condition instead?....that's where the some method come into play
 
+const anyDeposits = movements.some(mov => mov > 0); //checks for condition //true
+// const anyDeposits = movements.some(mov => mov > 1500); //true
+// const anyDeposits = movements.some(mov => mov > 5000); //false
+console.log(anyDeposits);
+//So basically, some method returns a boolean (true or false). in this case, we'd get a true in our cl because the movements arr contains values greater than 0
+console.log(movements.some(mov => mov === -130)); //true
 
+//EVERY METHOD
+//this method is pretty similar to the some method. The diff is that every returns true if ALL of the values in the array satisfies the set condition(if every value passes the test in our call back function, only then will every return true)
+console.log(movements.every(mov => mov > 0));//we'd get false in our console because not every values  in the movements array are greater than 0
+const account4 = {
+    owner: 'Sarah Smith',
+    movements: [430, 1000, 700, 50, 90],
+    interestRate: 1,
+    pin: 4444,
+  };
+  console.log(account4.movements.every(mov => mov > 0));
+//we  got true in our cl because every value in our account4.movements is greater than 0
 
-
-
-
+//Separate Callback
+const deposit = mov => mov < 0;
+//console.log(movements.map(deposit)); //cl; [true, true, false, true, false, false, true, true]
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+console.log(movements.filter(deposit));
 
 
 

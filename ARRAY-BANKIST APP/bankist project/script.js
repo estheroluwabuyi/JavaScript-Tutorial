@@ -64,7 +64,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 const displayMovements = function (movements) {
 
-  //empty containerMovements container beforeadding new element
+  //empty containerMovements container before adding new element
   containerMovements.innerHTML = ''; //empties the container
 
 
@@ -170,11 +170,13 @@ btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
  
   currentAcc = accounts.find(acc => acc.username === inputLoginUsername.value);
-  console.log(currentAcc);
+  //console.log(currentAcc);
 
   if (currentAcc?.pin === Number(inputLoginPin.value)) {
     //Display UI and welcome message
 labelWelcome.textContent = `Welcome back, ${currentAcc.owner.split(' ')[0]}`;
+//Split currentAcc.owner value then take the first letter of the returned splited array
+
 containerApp.style.opacity = 100;
 
 //clearing input field
@@ -205,6 +207,7 @@ btnTransfer.addEventListener('click', function (e) {
    receiverAcc && 
     currentAcc.balance >= amount && 
     receiverAcc?.username !== currentAcc.username){
+
       //Doing the transfer
 currentAcc.movements.push(-amount);
 receiverAcc.movements.push(amount);
@@ -215,6 +218,24 @@ updateUI(currentAcc)
 });
 
 
+//Using the some method to implement the request loan btn
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAcc.movements.some(mov => mov >= amount * 0.1)) {
+    //same as  amount /10
+    // console.log(currentAcc.movements);
+    //add movement
+currentAcc.movements.push(amount);
+    //update UI
+    updateUI(currentAcc);
+  }
+  inputLoanAmount.value = '';
+})
+
+
 //THE FINDINDEX METHOD
 btnClose.addEventListener('click', function (e){
 e.preventDefault();
@@ -222,8 +243,18 @@ console.log('Delete');
 
 if (inputCloseUsername.value === currentAcc.username && Number(inputClosePin.value) === currentAcc.pin) {
   
-const index = accounts.findIndex(acc => acc.username === currentAcc.username)
+const index = accounts.findIndex(acc => acc.username === currentAcc.username);
+//Delete Account
   accounts.splice(index, 1);
   console.log(index);
-}
+  //Hide UI
+  containerApp.style.opacity = 0;
+  console.log(accounts);
+  //findIndex is slightly same as the .indexOf(arrValue) method. The big diff is that we can only search for the value that is in the array using the index of e.g .indexOf(23); if the array contains a 23 the its true, if not, then its false
+};
+
+inputCloseUsername.value = inputClosePin.value = '';
 });
+
+console.log(account4.movements.every(mov => mov > 0));
+//we  got true in our cl because every value in our account4 is greater than 0
