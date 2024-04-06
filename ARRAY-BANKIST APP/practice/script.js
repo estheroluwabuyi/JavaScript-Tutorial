@@ -11,7 +11,7 @@ console.log(arr.slice(-1));
 console.log(arr.slice(-2)); //This started extraction from position 1 and excluded the last 2 indexes
 console.log(arr.slice(0, -3));
 //using slice method to create shallow copy of array;
-//We simply call the method without passing in any argumnets in it
+//We simply call the method without passing in any arguments in it
 console.log(arr.slice());
 
 //SPLICE method
@@ -361,7 +361,7 @@ GOOD LUCK 😀
  
  const avg1 = calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
  const avg2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
- console.log(avg1, avg2); */
+ console.log(avg1, avg2); 
 
 //THE FIND METHOD
 // const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
@@ -373,7 +373,6 @@ GOOD LUCK 😀
 //SOME AND EVERY METHODS
 //SOME METHOD
 const  movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
 //includes method
 console.log(movements.includes(-130)); //checks for equality
 //Includes method tests for equality. checks if the value inserted is present in an array. But what if we wanted to test for a condition instead?....that's where the some method come into play
@@ -403,6 +402,111 @@ const deposit = mov => mov < 0;
 console.log(movements.some(deposit));
 console.log(movements.every(deposit));
 console.log(movements.filter(deposit));
+//const [[x, ,z], [a, b, c], d, e] = arr;
+// console.log(x,z,a,b,c,d,e);
+
+
+//flat and flatMap method
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat());
+console.log(arrDeep.flat(2));
+
+// const accountsMovements = accounts.map(acc => acc.movements);
+// console.log(accountsMovements);
+
+// const flatMovements = accountsMovements.flat();
+// console.log(flatMovements);
+
+// const movementsGetSum = flatMovements.reduce((accu, mov) => accu + mov, 0);
+// console.log(movementsGetSum);
+
+//SORTING ARRAYS
+//used to sort the elements of an array in place and returns the sorted array. By default, it sorts the array alphabetically/lexicographically when applied to strings or numerically when applied to numbers
+//strings
+const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+console.log(owners.sort());
+
+//numbers
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements.sort());
+//the result we'd get in our cl will be an unordered array.  In order to achieve the sorting we want, we have to give the method a callback function, which will be called with 2 arguments
+//if we return something less than 0, A will be before B, but if we return something greater than 0, B will be before A
+ //This method also works on strings
+
+//Ascending order
+// movements.sort((a, b) =>{
+// if (a > b) return 1;
+// if (a < b) return -1;
+// // if (b > b) return 1;
+// });
+movements.sort((a, b)=> a - b);
+console.log(movements);
+
+//Descending order
+// movements.sort((a, b) =>{
+//     if (a > b) return -1;
+//     if (a < b) return 1;
+//     // if (b > b) return 1;
+//     });
+movements.sort((a, b)=> b - a);
+    console.log(movements);
+    // movements.sort(function (a, b) {
+    //    return b - a
+    // });
+    // console.log(movements);
+*/
+
+
+//MORE WAYS OF CREATING AND FILLING ARRAYS
+console.log([1, 2, 3, 4, 5, 6, 7]);
+console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+
+//WE can however generate arrays programmatically without having to define all the values manually like above
+const x = new Array(7);
+console.log(x);
+//We'd get an empty array with a length of 7 in our cl. This happened because we passed in only one value in the function. The function assumes the number we passed in as the length of the array and creates an empty array with a length of the number passed in. There is nothing we can do on this empty array. We can however only call the fill method on it
+//THE FILL METHOD
+x.fill(1);
+//this method fill up the entire with the value we've passed in, while still assuming  the prev value(7) as the length.
+//This does actually mutate the entire array
+//Besides the value we want to fill the array with(1), we can also specify where we want the filling to start[thats the 2nd argument of the method]----we could also specify where we want the filling to end as the third argument, or else it would fill to the end
+
+x.fill(1, 3, 5) //remember the filling starts from 4 and ends before the NO we specified [3 to 4]
+console.log(x);
+//We can also use the fill method on other arrays, it doesn't have to be an empty array
+const arr = [1, 2, 3, 4, 5, 5, 7];
+arr.fill(23, 2, 6);
+console.log(arr);
+
+//Array.from method
+const y = Array.from({length: 7}, () => 1);
+console.log(y);
+
+const z  = Array.from({length: 7}, (_, i) => i + 1);
+console.log(z);
+//We get the index from 1 - 7
+//This callback function is like that of the map method...just assume that we're calling the map method on an empty array [we use '_' because the var we defined is not really necessary...we just a throwaway var]
+
+//The Array.from was introduced into JS in order to create arrays on array like structures. Strings, maps, and sets are all iterables in JS and can be converted into real array with the use of the Array.from method
+
+//We can also use the Array.from on nodeList(what we get when we use query.selectAll on an element)
+
+/*
+labelBalance.addEventListener('click', function () {
+    const movementsUI = Array.from(document.querySelectorAll('.movements__value'), el => Number(el.textContent.replace('€', '')));
+  
+    console.log(movementsUI);
+  
+  //movementsUI2 = [...document.querySelectorAll('.movements__value')];
+  //The above also creates a new array, but we will have to do the mapping separately
+  });
+  //We used the Array.from method to create an array from the result of the querySelectorAll, which a nodeList (not really an array, but an array like structure). We then included a mapping method which then transforms the initial array to an array exactly as we wanted
+  
+  //There,s however another way of converting the nodeList into an array. We use the spread operator */
+  
 
 
 
@@ -431,22 +535,10 @@ console.log(movements.filter(deposit));
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// const s  = Array.from({length: 7}, function (_, i) {
+//  return Math.trunc(Math.random() * 7) + i + 1;  
+// });
+// console.log(s);
 ///////////////////////////////////////
 // Coding Challenge #4
 

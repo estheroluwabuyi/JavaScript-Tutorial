@@ -62,13 +62,15 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
 
   //empty containerMovements container before adding new element
   containerMovements.innerHTML = ''; //empties the container
 
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
-  movements.forEach(function(mov, i) {
+
+ movs.forEach(function(mov, i) {
 
 const type = mov > 0 ? 'deposit' : 'withdrawal';
 
@@ -256,5 +258,75 @@ const index = accounts.findIndex(acc => acc.username === currentAcc.username);
 inputCloseUsername.value = inputClosePin.value = '';
 });
 
-console.log(account4.movements.every(mov => mov > 0));
+let sorted = false;
+//IMPLEMENTING SORT BTN
+btnSort.addEventListener('click', function(e) {
+e.preventDefault();
+displayMovements(currentAcc.movements, !sorted);
+sorted = !sorted;
+});
+
+//Array.from method
+//We can also use the Array.from on nodeList(what we get when we use query.selectAll on an element)
+labelBalance.addEventListener('click', function () {
+  const movementsUI = Array.from(document.querySelectorAll('.movements__value'), el => Number(el.textContent.replace('€', '')));
+
+  console.log(movementsUI);
+
+//movementsUI2 = [...document.querySelectorAll('.movements__value')];
+//The above also creates a new array, but we will have to do the mapping separately
+});
+//We used the Array.from method to create an array from the result of the querySelectorAll, which a nodeList (not really an array, but an array like structure). We then included a mapping method which then transforms the initial array to an array exactly as we wanted
+
+//There,s however another way of converting the nodeList into an array. We use the spread operator
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// console.log(account4.movements.every(mov => mov > 0));
 //we  got true in our cl because every value in our account4 is greater than 0
+
+/*
+//THE FLAT METHOD to calc the total amount of movements
+//flat and flatMap method
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat());
+console.log(arrDeep.flat(2));
+
+const overallBalance = 
+accounts
+.map(acc => acc.movements)
+.flat()
+.reduce((accu, mov) => accu + mov, 0);
+console.log(overallBalance);
+
+//flatMap combines the map and the flat method
+const overallBalances =
+ accounts
+.flatMap(acc => acc.movements)
+.reduce((accu, mov) => accu + mov, 0);
+console.log(overallBalance); */
