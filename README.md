@@ -1,2 +1,2 @@
 # JAVASCRIPT TUTORIAL
-Progress on the Javascript course I am taking
+### Progress on the Javascript course I am taking
