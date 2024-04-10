@@ -451,13 +451,12 @@ console.log(movements);
 //     if (a < b) return 1;
 //     // if (b > b) return 1;
 //     });
-movements.sort((a, b)=> b - a);
+movements((a, b)=> b - a);
     console.log(movements);
     // movements.sort(function (a, b) {
     //    return b - a
     // });
     // console.log(movements);
-*/
 
 
 //MORE WAYS OF CREATING AND FILLING ARRAYS
@@ -492,7 +491,7 @@ console.log(z);
 
 //The Array.from was introduced into JS in order to create arrays on array like structures. Strings, maps, and sets are all iterables in JS and can be converted into real array with the use of the Array.from method
 
-//We can also use the Array.from on nodeList(what we get when we use query.selectAll on an element)
+//We can also use the Array.from on nodeList(what we get when we use query.selectAll on an element) */
 
 /*
 labelBalance.addEventListener('click', function () {
@@ -505,27 +504,8 @@ labelBalance.addEventListener('click', function () {
   });
   //We used the Array.from method to create an array from the result of the querySelectorAll, which a nodeList (not really an array, but an array like structure). We then included a mapping method which then transforms the initial array to an array exactly as we wanted
   
-  //There,s however another way of converting the nodeList into an array. We use the spread operator */
+  //There's however another way of converting the nodeList into an array. We use the spread operator */
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -547,7 +527,7 @@ Julia and Kate are still studying dogs, and this time they are studying if dogs 
 Eating too much means the dog's current food portion is larger than the recommended portion, and eating too little is the opposite.
 Eating an okay amount means the dog's current food portion is within a range 10% above and 10% below the recommended portion (see hint).
 
-1. Loop over the array containing dog objects, and for each dog, calculate the recommended food portion and add it to the object as a new property. Do NOT create a new array, simply loop over the array. Forumla: recommendedFood = weight ** 0.75 * 28. (The result is in grams of food, and the weight needs to be in kg)
+1. Loop over the array containing dog objects, and for each dog, calculate the recommended food portion and add it to the object as a new property. Do NOT create a new array, simply loop over the array. Formula: recommendedFood = weight ** 0.75 * 28. (The result is in grams of food, and the weight needs to be in kg)
 2. Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
 3. Create an array containing all owners of dogs who eat too much ('ownersEatTooMuch') and an array with all owners of dogs who eat too little ('ownersEatTooLittle').
 4. Log a string to the console for each array created in 3., like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
@@ -569,3 +549,66 @@ const dogs = [
 
 GOOD LUCK 😀
 */
+//1
+const dogs = [
+    { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+    { weight: 8, curFood: 200, owners: ['Matilda'] },
+    { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+    { weight: 32, curFood: 340, owners: ['Michael'] }
+  ];
+
+//console.log(dogs);
+
+  dogs.forEach(function (dog) {
+   dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28);
+   console.log(dog);
+  });
+
+//2  
+const dogSarah = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(dogSarah);
+console.log
+(`Sarah's dog is eating too ${dogSarah.curFood > dogSarah.recommendedFood ? 'much' : 'little'}`);
+
+//3 
+const ownersEatTooMuch = dogs
+.filter(dog => dog.curFood > dog.recommendedFood)
+.flatMap(dog => dog.owners)
+console.log(ownersEatTooMuch);
+
+const ownersEatTooLittle = dogs
+.filter(dog => dog.curFood < dog.recommendedFood)
+.flatMap(dog => dog.owners)
+   console.log(ownersEatTooLittle);
+
+// 4
+const ownersEatTooMuchString = `${ownersEatTooMuch.join(' and ')} dogs eat too much!`
+console.log(ownersEatTooMuchString);
+
+const ownersEatTooLittleString = `${ownersEatTooLittle.join(' and ')} dogs eat too little!`
+console.log(ownersEatTooLittleString);
+
+// 5
+const dogsEatingExactFood = dogs.some(dog => dog.curFood === dog.recommendedFood); //some means ANY and every means ALL
+console.log(dogsEatingExactFood);
+
+
+//6
+const okayFood = dog => dog.curFood > (dog.recommendedFood * 0.90) && dog.curFood < (dog.recommendedFood * 1.10);
+
+const dogsEatingOkayFood = dogs.some(okayFood);
+console.log(dogsEatingOkayFood);
+
+//7
+const dogsEatingOkayFoodArr = dogs.filter(okayFood)
+console.log(dogsEatingOkayFoodArr);
+
+// 8
+const dogsCopy = dogs.slice()
+//console.log(dogsCopy);
+const dogsRecSort = dogsCopy.sort((a, b) =>
+a.recommendedFood - b.recommendedFood);
+
+console.log(dogsRecSort);
+
+//SOLVED THE WHOLE CODE CHALLENGE😎🚀😎....I'M SO PROUD OF MYSELF...THS IS MY BEST SESSION SO FAR😍🎉

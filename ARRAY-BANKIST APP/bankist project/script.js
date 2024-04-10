@@ -280,16 +280,77 @@ labelBalance.addEventListener('click', function () {
 
 //There,s however another way of converting the nodeList into an array. We use the spread operator
 
+// const bankDepositSum = accounts.map(acc => acc.movements)
+// .flat()
+// .reduce((accu, mov) => accu + mov, 0)
 
 
 
+//ARRAY METHODS IN PRACTICE
+// (1) GETTING DEPOSITS
+const bankDepositSum = accounts
+.flatMap(acc => acc.movements)
+.filter(mov => mov > 0)
+.reduce((accu,cur) => accu + cur, 0);
+
+console.log(bankDepositSum);
+
+// (2) counting number of deposits >= 1000
+// const numDeposits1000 = accounts
+// .flatMap(acc => acc.movements)
+// .filter(mov => mov >= 1000).length
+const numDeposits1000 = accounts
+ .flatMap(acc => acc.movements)
+//  .reduce((count, cur) => (cur >= 1000 ? count + 1 : count), 0)
+.reduce((count, cur) => (cur >= 1000 ? ++count : count), 0)
+ 
+console.log(numDeposits1000);
 
 
+// const s  = Array.from({length: 7}, function (_, i) {
+//  return Math.trunc(Math.random() * 7) + i + 1;  
+// });
+// console.log(s);
 
 
+//PREFIXED ++ OPERATOR
+let a = 10;
+console.log(a + 1); // 11
+console.log(++a); // 11
+console.log(a); // 11
 
+// (3) USING THE REDUCE METHOD TO CREATE AN OBJ THAT CONTAINS SUM OF THE DEPOsITS ND WITHDRAWALS
+// We could use reduce method instead of most methods...we could use it for anything
+const {deposits, withdrawals} = accounts
+.flatMap(acc => acc.movements)
+.reduce((sums,cur) => {
+//cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
+sums[cur > 0 ? 'deposits' : 'withdrawals'] += cur
+return sums;
+//in the end we always have to return the accumulator
+}, 
+{deposits: 0, withdrawals: 0});
+console.log(deposits, withdrawals);
 
+//(4) //TITLECASE ON SOME SENTENCES
+const convertTitleCase =function (title) {
+  const capitalise = function (str) {
+    return str[0].toUpperCase() + str.slice(1);
+  }
 
+  const exceptions = ['a', 'an', 'the', 'but', 'or', 'on', 'in', 'with', 'is', 'and'];
+
+  const titleCase = title.toLowerCase().split(' ')
+  .map(word => exceptions.includes(word) ? word : capitalise(word)) //what this simply means is that; if the current word is included in the exceptions array, return that word without any modification else capitalize it according to the set rule
+  .join(' ');
+
+return capitalise(titleCase);
+}
+
+console.log(convertTitleCase('this is a nice title'));
+  console.log(convertTitleCase('this is a LONG title'));
+  console.log(convertTitleCase('this is a LONG title but not too long'));
+  console.log(convertTitleCase('and here is another title with an EXAMPLE'));
 
 
 
