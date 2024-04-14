@@ -354,7 +354,7 @@ console.log((2.7).toFixed(0));
 console.log((2.7).toFixed(3));
 console.log((2.345).toFixed(2));
 console.log(+(2.345).toFixed(2));
-*/
+
 
 //THE REMAINDER OPERATOR
 console.log(5 % 2); //5 / 2 = 2 remainder 1 //2 * 2 + 1 = 5
@@ -390,3 +390,64 @@ const transferFee2 = 1_500;
 
 console.log(+ '230000');
 console.log(+ '230_000'); //NaN
+
+
+//BIG INT
+//Primitive. Special integer introduced in ES2020\
+console.log(6456789709977643448532447890766n);
+console.log(BigInt(6456789709));
+console.log(6456789709977643448532447890766n *344444n);
+
+console.log(20 > 15);
+console.log(typeof 20n);
+console.log(20n === 20);
+console.log(20n == 20);
+
+console.log(20n / 6n); //cuts off the decimal parts
+console.log(20 / 6); */
+/*
+//CREATING DATES
+//4 ways of creating dates im JS;
+//(1)
+const now = new Date();
+console.log(now);
+
+//(2)
+console.log(new Date('Apr 14 2024 19:22:26'));
+console.log(new Date('Dec 24, 2014'));
+console.log(new Date(account1.movementsDates[0]));
+
+//(3)
+console.log(new Date(2037, 10, 19, 15, 23, 5));
+console.log(new Date(2037, 10, 32)); //JS autocorrects dates
+
+//(4)
+console.log(new Date(0));
+console.log(new Date(3 * 24 * 60 * 60 * 1000)); */
+//WORKING WITH DATES
+const future = new Date(2037, 10, 19, 15, 23);
+console.log(future.getFullYear());
+console.log(future.getMonth());
+console.log(future.getDate());
+console.log(future.getDay());
+console.log(future.getHours());
+console.log(future.getMinutes());
+console.log(future.getSeconds());
+// console.log(future.getMilliseconds());
+console.log(future.toISOString());
+console.log(future.getTime());
+
+console.log(new Date(2142253380000));
+//getting the date based on the milliseconds that have passed since 1970
+
+
+//To get current time stamp
+console.log(Date.now());
+
+// const now = new Date();
+// console.log(now.getTime());
+
+//Getting Dates using Set method
+future.setFullYear(2040)
+//changes the year. Also performs auto correction. We can use the set method to get basically whatever date method we want too get
+console.log(future);
