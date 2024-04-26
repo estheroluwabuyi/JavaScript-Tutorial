@@ -1,15 +1,17 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (e) {
-    e.preventDefault();
+  e.preventDefault();
   modal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 };
@@ -19,19 +21,110 @@ const closeModal = function () {
   overlay.classList.add('hidden');
 };
 
-
 btnsOpenModal.forEach(btn => {
-    btn.addEventListener('click', openModal);
+  btn.addEventListener('click', openModal);
 
-    btnCloseModal.addEventListener('click', closeModal);
-    overlay.addEventListener('click', closeModal);
+  btnCloseModal.addEventListener('click', closeModal);
+  overlay.addEventListener('click', closeModal);
 
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-          closeModal();
-        }
-      });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+});
 
+//IMPLEMENTING SMOOTH SCROLLING
+btnScrollTo.addEventListener('click', function (e) {
+  //   const s1coords = section1.getBoundingClientRect();
+  //   console.log(s1coords);
+  // //gets distance of the beginning of the webpage to the section1 element
+
+  // console.log(e.target.getBoundingClientRect());
+  // //gets distance of the beginning of the webpage to the btn clicked
+
+  // console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+  // //we would get the scroll length(where we have scrolled to) for Y(vertical) and for X(horizontal);
+
+  // //to read the viewport of the page
+  // console.log(
+  //   'height/width viewport', document.documentElement.clientHeight,  document.documentElement.clientWidth
+  // );
+
+  //Old way of implementing scroll effect
+  //Scrolling
+  // window.scrollTo(s1coords.left, s1coords.top)
+  //the top specified here is relative to the viewport and not  to the doc..not to the top of the page. Here, if we are few inches away from the the  top, we wont be able to implement the smooth scrolling
+
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset);
+  //(current position + current scroll)
+  //with thi, evn if we are 5px  close to the section we want to scroll to, we would still be able to implement the smooth scrolling. I t is no longer relative to the viewport but now an absolute property
+
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth'
+  // });
+
+  //more modern way of implementing scroll effect
+  section1.scrollIntoView({
+    behavior: 'smooth',
+  });
+});
+
+/////////////////////////////////////////
+//Page Navigation
+// document.querySelectorAll('.nav__link').forEach(function(el){
+// el.addEventListener('click', function(e){
+// e.preventDefault();
+// // const id = this.getAttribute('href');
+// // console.log(id);
+// // document.querySelector(id).scrollIntoView({behavior: 'smooth'});
+// });
+// });
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  // console.log(e.target);
+
+  //Matching strategy
+  if (e.target.classList.contains('nav__link')) {
+    // console.log('Link');
+    e.preventDefault();
+    const id = e.target.getAttribute('href');
+    // console.log(id);
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+//Building A Tabbed Component
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+
+  //Guard clause; its an if statement that will return early if condition is matched;
+  if (!clicked) return;
+
+  //above is same as writing;
+  // if (clicked) {
+  // clicked.classList.add('operations__tab--active')
+  // }
+
+  //Removing Active classes..clearing class on all then adding to the one clicked
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  //Activate tab
+  clicked.classList.add('operations__tab--active');
+
+  //Activate content area
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
 });
 
 //////////////////
@@ -74,116 +167,163 @@ header.append(message);
 // header.before(message);
 // header.after(message);
 
-/*
 //Deleting Elements
-document.querySelector('.btn--close--cookie').addEventListener('click',()=> {
-// message.remove(); //newer way of removing
-message.parentElement.removeChild(message); //old way of removing
-});
-
+// document.querySelector('.btn--close--cookie').addEventListener('click',()=> {
+// // message.remove(); //newer way of removing
+// message.parentElement.removeChild(message); //old way of removing
+// });
 
 //STYLES, ATTRIBUTES AND CLASSES
 //STYLES
-message.style.backgroundColor = '#37383D';
-message.style.width = '120%';
-console.log(message.style.width);
-console.log(message.style.backgroundColor);
-console.log(message.style.color); //we would get nothing in our cl becos js does not read the style that is absent in the DOM..inline styles
+// message.style.backgroundColor = '#37383D';
+// message.style.width = '120%';
+// console.log(message.style.width);
+// console.log(message.style.backgroundColor);
+// console.log(message.style.color); //we would get nothing in our cl becos js does not read the style that is absent in the DOM..inline styles
 //to get the whole style of an element;
 // console.log(getComputedStyle(message));
-console.log(getComputedStyle(message).color);
-console.log(getComputedStyle(message).height);
+// console.log(getComputedStyle(message).color);
+// console.log(getComputedStyle(message).height);
 
-message.style.height = Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
+// message.style.height = Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
 
 //custom props or css variables
-document.documentElement.style.setProperty('--color-primary', 'orangered');
+// document.documentElement.style.setProperty('--color-primary', 'orangered');
 
 //ATTRIBUTES e.g alt, src, class, id e.t.c
-const logo = document.querySelector('.nav__logo');
-console.log(logo.alt);
-console.log(logo.src);
-console.log(logo.className);
+// const logo = document.querySelector('.nav__logo');
+// console.log(logo.alt);
+// console.log(logo.src);
+// console.log(logo.className);
 
-//We can manipulate the attribute texts
-logo.alt = 'Beautiful Minimalist Logo';
-console.log(logo.alt);
+// //We can manipulate the attribute texts
+// logo.alt = 'Beautiful Minimalist Logo';
+// console.log(logo.alt);
 
 //Non Standard...these are attributes that are not associated with img, even though they don't exist in the real world, we can still get them
-console.log(logo.designer);
-logo.setAttribute('company', 'Bankist');
+// console.log(logo.designer);
+// logo.setAttribute('company', 'Bankist');
 
-//to get the relative url/src;
-console.log(logo.getAttribute('src'));
+// //to get the relative url/src;
+// console.log(logo.getAttribute('src'));
 
-//to get the absolute url/src;
-console.log(logo.src);
+// //to get the absolute url/src;
+// console.log(logo.src);
 
-const link = document.querySelector('.twitter-link');
-console.log(link.href);
-console.log(link.getAttribute('href'));
-//the link is absolute anyway so we wont really see any diff here
+// const link = document.querySelector('.twitter-link');
+// console.log(link.href);
+// console.log(link.getAttribute('href'));
+// //the link is absolute anyway so we wont really see any diff here
 
-const linke = document.querySelector('.nav__link--btn');
-console.log(linke.href);
-console.log(linke.getAttribute('href'));
+// const linke = document.querySelector('.nav__link--btn');
+// console.log(linke.href);
+// console.log(linke.getAttribute('href'));
 //getAttribute('href') will simply return '#'in cl, while the first will return the absolute link to the href
 
-//Data Attributes
-console.log(logo.dataset.versionNumber);
-//the data attribute are always stored i the dataset obj. We use data attribute when we work with the UI, esp when we store data in the users' interface(HTML code);
+// //Data Attributes
+// console.log(logo.dataset.versionNumber);
+// the data attribute are always stored i the dataset obj. We use data attribute when we work with the UI, esp when we store data in the users' interface(HTML code);
 
-logo.classList.add('c', 'j'); //we can pass multiple values into the classList method
-logo.classList.remove('c', 'j');
-logo.classList.toggle('c');
-logo.classList.contains('c'); //returns boolean //not includes
+// logo.classList.add('c', 'j'); //we can pass multiple values into the classList method
+// logo.classList.remove('c', 'j');
+// logo.classList.toggle('c');
+// logo.classList.contains('c'); //returns boolean //not includes
 
 //we can also use className to set class to an element. This will however overwrite the existing classes and only allows us to set one class to an element, hence, do not use!!
 // logo.className = 'jonas'
-*/
 
-//IMPLEMENTING SMOOTH SCROLLING
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
+//Types of Events and Event Handlers
+// const h1 = document.querySelector('h1');
 
-btnScrollTo.addEventListener('click', function(e){
+//removing eventlistener
+// const alertH1 = function (e){
+//   alert('addEventListener: Great! You are reading the heading.');
 
-  /*
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
-//gets distance of the beginning of the webpage to the section1 element
+//   // h1.removeEventListener('mouseenter', alertH1);
+//   };
 
-console.log(e.target.getBoundingClientRect());
-//gets distance of the beginning of the webpage to the btn clicked
+//ways of adding eventlistener
+//1.
+// h1.addEventListener('mouseenter', alertH1);
 
-console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
-//we would get the scroll length(where we have scrolled to) for Y(vertical) and for X(horizontal);
+// //we can remove the event listener at any point / time;
+// setTimeout(() =>  h1.removeEventListener('mouseenter', alertH1), 3000);
 
-//to read the viewport of the page
-console.log(
-  'height/width viewport', document.documentElement.clientHeight,  document.documentElement.clientWidth
-); */
+//2.
+// h1.onmouseenter = function (e){
+//   alert('onmouseenter: Great! You are reading the heading.');
+//   };
 
-//Old way of implementing scroll effect
-//Scrolling
-// window.scrollTo(s1coords.left, s1coords.top)
-//the top specified here is relative to the viewport and not  to the doc..not to the top of the page. Here, if we are few inches away from the the  top, we wont be able to implement the smooth scrolling
+//3. - using an html attribute
+//<h1 onclick="alert('HTML alert')">
 
-// window.scrollTo(
-//   s1coords.l + window.pageXOffset,
-//   s1coords.top + window.pageYOffset);
-  //(current position + current scroll)
-//with thi, evn if we are 5px  close to the section we want to scroll to, we would still be able to implement the smooth scrolling. I t is no longer relative to the viewport but now an absolute property
+//EVENT PROPAGATION: BUBBLING AND CAPTURING
+//rgb(255,255,255)
+// const randomInt = (min, max) =>
+// Math.floor(Math.random() * (max - min + 1) + min);
 
-// window.scrollTo({
-//   left: s1coords.l + window.pageXOffset,
-//   top: s1coords.top + window.pageYOffset,
-//   behavior: 'smooth'
+// const randomColor = () => `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+// //console.log(randomColor(0, 255));
+
+// document.querySelector('.nav__link').addEventListener('click', function(e){
+//   this.style.backgroundColor = randomColor();
+// console.log('LINK', e.target, e.currentTarget);
+// console.log(e.currentTarget === this);
+
+// // e.stopPropagation();
 // });
 
-//more modern way of implementing scroll effect
-section1.scrollIntoView({
-behavior: 'smooth'
+// document.querySelector('.nav__links').addEventListener('click', function(e){
+//   this.style.backgroundColor = randomColor();
+//   console.log('CONTAINER', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this);
+// });
+
+// document.querySelector('.nav').addEventListener('click', function(e){
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this);
+// });
+
+//EVENT DELEGATION: Implementing Page Navigation
+
+
+//DOM TRAVERSING
+const h1 = document.querySelector('h1');
+
+//Going Downwards(selecting child element)
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+//childNodes is not that used we use .children instead
+console.log(h1.children);
+
+//to select fist and last element child
+console.log(h1.firstElementChild);
+h1.firstElementChild.style.color = 'white';
+//changes the color of the first element of h1...element enclosed in a tag
+h1.lastElementChild.style.color = 'orangered';
+//changes the color of the last element of h1...element enclosed in a tag e.g div, span e.t.c
+
+//Going Upwards (Selecting parent element)
+console.log(h1.parentNode); //returns nodes
+console.log(h1.parentElement);
+
+//lets say for example, we have multiple headers in our html, and we want to select the one closest to  h1..the direct header of h1;
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+//this would select h1 itself
+
+//Going sideways: siblings; in js, we can only access the direct siblings...only prev and next
+console.log(h1.previousElementSibling); //wed get null in cl bcos this h1 has no prev sibling
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling); //returns node list
+
+//to get all the siblings;
+console.log(h1.parentElement.children); //wed get all the siblings of h1 plus h1 itself
+[...h1.parentElement.children].forEach(function(el){
+  // if(el !== h1) el.style.transform = 'scale(0.5)'
 });
 
-});
