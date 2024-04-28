@@ -167,6 +167,64 @@ window.addEventListener('scroll', function (e) {
   }
 });
 
+/*
+//A BETTER WAY: THE INTERSECTION OBSERVER API
+//This API allows our code to basically observe changes to the way that a certain target element intersects with another element, or the way it intersects with the viewport
+//Instead of defining the functions and objects separately, we can call it inside the IntersectionObserver();
+
+const obsCallback = function (entries, observer) {
+  entries.forEach(entry =>{
+console.log(entry);
+  })
+}
+
+const obsOptions = {
+  //obj needs a root..the root is the element the target is intersecting..i think the root is an element too..we can write null if don't want to select an element
+  root: null, //root is null cos we are interested in the entire viewport
+
+  //next, we have the threshold..its the % of the intersection at which the observer callback will be called...the callback function will gat called each time the observer element(section1) is intersecting the root el and the threshold that we defined 
+threshold: [0, 0.2], //same as 10%..a percentage we want to have visible
+//setting 0 means that our callback will be triggered each time the target element moves completely out of the view and fr 0.2, as soon as  it enters the view. If we specified 1, that means the callback function will get called only when the whole section1 is visible to the viewport. So basically the 0.2 means that when 20% of the section1 is visible to the viewport, then the callback function will be called
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+observer.observe(section1);
+//so basically, whenever our target(section1) is intersecting the viewport(root) at 10%(threshold), then the callback function will get called
+//function gets called with 2 arguments..entries and observer itself
+*/
+
+const header = document.querySelector('.header');
+
+const navHeight = nav.getBoundingClientRect().height;
+// console.log(navHeight);
+
+const stickyNav = function (entries) {
+  const [entry] = entries; //same as entries[0]
+
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+
+}
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0, //when 0% of the header is visible(completely out of view), then we want something to happen = this is why we set the threshold to 0 
+  rootMargin: `-${navHeight}px`, //only accepts px or percent
+  //this is basically the length before or after the header that we want our callback function to be visible
+});
+
+headerObserver.observe(header); //its observing header
+
+
+
+
+
+
+
+
+
+
+
 //////////////////
 //////////////////
 ///LECTURES
