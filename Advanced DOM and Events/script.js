@@ -203,17 +203,92 @@ const stickyNav = function (entries) {
 
   if (!entry.isIntersecting) nav.classList.add('sticky');
   else nav.classList.remove('sticky');
-
-}
+};
 
 const headerObserver = new IntersectionObserver(stickyNav, {
   root: null,
-  threshold: 0, //when 0% of the header is visible(completely out of view), then we want something to happen = this is why we set the threshold to 0 
+  threshold: 0, //when 0% of the header is visible(completely out of view), then we want something to happen = this is why we set the threshold to 0
   rootMargin: `-${navHeight}px`, //only accepts px or percent
-  //this is basically the length before or after the header that we want our callback function to be visible
+  //this is basically the length before or after the header that we want our callback function to be visible.
+  //It simply make the sticky nav load a little early before it is reached
 });
 
 headerObserver.observe(header); //its observing header
+
+//REVEAL SECTION
+const allSection = document.querySelectorAll('.section');
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+
+  //if its not intersecting, itd simply do nothing
+  if(!entry.isIntersecting) return;
+
+  //if it is intersecting, the below will work
+  entry.target.classList.remove('section--hidden');
+
+  observer.unobserve(entry.target);
+}
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15, //15%--section reveals when its 15% visible
+});
+
+allSection.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden')
+});
+
+
+//LAZY LOADING IMAGES--really great for performance
+const imgTarget = document.querySelectorAll('img[data-src]');
+// console.log(imgTarget);
+
+const loading = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if(!entry.isIntersecting) return;
+
+  //Replace src with data-src
+entry.target.src = entry.target.dataset.src;
+// console.log(entry.target);
+
+//only removes blur effect after the images have finish loading and the low quality image has been replaced with the high
+entry.target.addEventListener('load',()=>{
+entry.target.classList.remove('lazy-img');
+} );
+
+observer.unobserve(entry.target)
+}
+
+const imgObserver = new IntersectionObserver(loading, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px', //loads image a little early b4 its reached
+});
+
+imgTarget.forEach(img => imgObserver.observe(img));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
