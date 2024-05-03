@@ -223,13 +223,13 @@ const revealSection = function (entries, observer) {
   // console.log(entry);
 
   //if its not intersecting, itd simply do nothing
-  if(!entry.isIntersecting) return;
+  if (!entry.isIntersecting) return;
 
   //if it is intersecting, the below will work
   entry.target.classList.remove('section--hidden');
 
   observer.unobserve(entry.target);
-}
+};
 
 const sectionObserver = new IntersectionObserver(revealSection, {
   root: null,
@@ -238,9 +238,8 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSection.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden')
+  // section.classList.add('section--hidden');
 });
-
 
 //LAZY LOADING IMAGES--really great for performance
 const imgTarget = document.querySelectorAll('img[data-src]');
@@ -248,21 +247,21 @@ const imgTarget = document.querySelectorAll('img[data-src]');
 
 const loading = function (entries, observer) {
   const [entry] = entries;
-  console.log(entry);
+  // console.log(entry);
 
-  if(!entry.isIntersecting) return;
+  if (!entry.isIntersecting) return;
 
   //Replace src with data-src
-entry.target.src = entry.target.dataset.src;
-// console.log(entry.target);
+  entry.target.src = entry.target.dataset.src;
+  // console.log(entry.target);
 
-//only removes blur effect after the images have finish loading and the low quality image has been replaced with the high
-entry.target.addEventListener('load',()=>{
-entry.target.classList.remove('lazy-img');
-} );
+  //only removes blur effect after the images have finish loading and the low quality image has been replaced with the high
+  entry.target.addEventListener('load', () => {
+    entry.target.classList.remove('lazy-img');
+  });
 
-observer.unobserve(entry.target)
-}
+  observer.unobserve(entry.target);
+};
 
 const imgObserver = new IntersectionObserver(loading, {
   root: null,
@@ -272,33 +271,124 @@ const imgObserver = new IntersectionObserver(loading, {
 
 imgTarget.forEach(img => imgObserver.observe(img));
 
+//BUILDING A SLIDER COMPONENT
+function slider() {
+  const slides = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const dotContainer = document.querySelector('.dots');
 
+  //for btn
+  let curSlide = 0;
+  //to end the slides
+  let maxSlide = slides.length; //length = 4
 
+  // scaling the slider
+  // const slider = document.querySelector('.slider');
+  // slider.style.transform = 'scale(0.3) translateX(-1000px)';
+  // slider.style.overflow = 'visible';
 
+  //implementing the slider
+  // slides.forEach((s, i) => {
+  //   //we have 4 imgs so the length of i is typically 4, but remember it starts counting from 0 then we'd have 0 - 3(4L)
+  //   s.style.transform = `translateX(${100 * i}%)`;
+  //   //100 * i(0) = 0, 100 * i(1) = 2...
+  //   //we want x to be @ i(0) = 0%, i(1) = 100%, i(2) = 200%, i(3) = 300%
+  // // console.log(i);
+  // });
 
+  //FUNCTIONS
+  const createDots = function () {
+    slides.forEach((_, i) => {
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+  // createDots();
 
+  function activateDot(slide) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
 
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  }
 
+  // activateDot(0);
 
+  //function for the slider
+  function goToSlide(slide) {
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+    );
+    //here we want X to be -100%, 0%, 100%, 200%
+    //lets say the first slide is 1, 0-1=-1 * 100%=-100%
+  }
 
+  //same as the above we just set the slide(curSlide to 0)
+  // goToSlide(0);
 
+  //Next Slide
+  function nextSlide() {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      //or we increase the slide by one
+      curSlide++;
+      activateDot(curSlide);
+    }
 
+    //when we click on btn, 1 will be added to curSlide
+    goToSlide(curSlide);
+  }
 
+  //Go to prev slide
+  function prevSlide() {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+      //rem; maxSlide = slides.length;
+    } else {
+      curSlide--;
+    }
 
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  }
+  function init() {
+    goToSlide(0);
+    createDots();
+    activateDot(0);
+  }
+  init();
 
+  //Event Handlers
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
 
+  //ATTACHING EVENT HANDLER TO KEYBOARD EVENTS
+  document.addEventListener('keydown', function (e) {
+    // console.log(e);
+    if (e.key === 'ArrowLeft') prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
+    //if(e.key === 'ArrowRight') nextSlide(); //same as above
+  });
 
-
-
-
-
-
-
-
-
-
-
-
+  dotContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')) {
+      //this would also work
+      // const {slide} = e.target.dataset;
+      const slide = e.target.dataset.slide;
+      goToSlide(slide);
+      activateDot(slide);
+    }
+  });
+  //target is the child, currentTarget is the parent element
+}
+slider();
 
 //////////////////
 //////////////////
@@ -500,3 +590,21 @@ console.log(h1.parentElement.children); //wed get all the siblings of h1 plus h1
   // if(el !== h1) el.style.transform = 'scale(0.5)'
 });
 */
+
+//Lifecycle DOM Events
+//DOM CONTENT LOADED
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parsed and DOM tree built', e);
+});
+
+//LOAD EVENT
+window.addEventListener('load', function(e){
+  console.log('PAGE FULLY LOADED', e);
+});
+
+//BEFOREUNLOAD
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   console.log(e);
+//   e.returnValue = '';
+// });
