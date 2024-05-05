@@ -608,3 +608,6 @@ window.addEventListener('load', function(e){
 //   console.log(e);
 //   e.returnValue = '';
 // });
+
+// EFFICIENT SCRIPT LOADING: DEFER AND ASYNC
+//diff ways of loading a js script in html
