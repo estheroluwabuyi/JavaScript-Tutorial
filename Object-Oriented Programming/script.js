@@ -2,11 +2,11 @@
 //CONSTRUCTOR FUNCTIONS AND THE NEW OPERATOR
 //We can use constructor function to build an object using a function. A constructor function is a completely normal function. The only diff btw a constructor function and a regular function is that we call the constructor function with the new operator. We should constructor functions with capital letters. We can use the function expression and function statement for constructor functions. But the arrow function wont work because it does not have its own this keyword and we need that. 
 
-// const Person = function (firstName, birthYear) {
+// const Person = function (fullName, birthYear) {
 //     //filling the empty object;
 //     //value name must be the exact same as the param passed. Tho, prop names can be diff..we could use any name as the prop name
 //     //instance properties
-//     this.firstName = firstName;
+//     this.fullName = fullName;
 //     this.birthYear = birthYear;
 
 //     //never create a method inside of a constructor function
@@ -68,7 +68,7 @@
 // console.log(jonas, matilda, jaccques);1
 // //this newly declared prop 'species' is not a property of the objs linked to it but of the prototype itself. those objs only have access to it,
 
-// console.log(jonas.hasOwnProperty('firstName'));
+// console.log(jonas.hasOwnProperty('fullName'));
 // console.log(jonas.hasOwnProperty('species'));
 
 // // Prototypal Inheritance and the Prototype Chain
@@ -149,29 +149,79 @@ mercedes.accelerate();
 
 //class declaration
 class PersonCl {
-    constructor(firstName, birthYear){
+    constructor(fullName, birthYear){
         //props for the object
-        this.firstName = firstName;
+        this.fullName = fullName;
         this.birthYear = birthYear
     }
     //methods will be added to the .prototype property
     calcAge() {
 console.log(2024 - this.birthYear);
     }
+
+    get age() {
+        return 2024 - this.birthYear
+    }
+
+    //set prop that already exist
+    set fullName(name){
+        console.log(name);
+
+        if (name.includes(' ')) {
+            //creating a new var
+            this._fullName = name;
+        }else{
+            alert(`${name} is not a full name!`)
+        }
+    }
+get fullName(){
+    return this._fullName
+}
 };
 //when we create a new instance, it is the constructor that is going to be called and it will return a new object and that will  e stored into our instance 'jessica'
-const jessica = new PersonCl('Jessica', 1996);
+const jessica = new PersonCl('Jessica Davies', 1996);
 console.log(jessica);
 //very nice and convenient
 jessica.calcAge();
+console.log(jessica.age)
+
 console.log(jessica.__proto__ === PersonCl.prototype);
 
 // we can also add methods manually(from outside) to the prototype
 PersonCl.prototype.greet = function () {
-console.log(`Hey, ${this.firstName}`);
+console.log(`Hey, ${this.fullName}`);
 };
 jessica.greet();
 
 //1. Classes are not hoisted(we cant use them before they are declared)..function declarations are hoisted
 //2. Classes are also first class citizens just like functions...this means that we can pass them into functions and also return them from functions. This is because classes ara really just another kind of function behind the scenes
 //3. Classes are executed in strict mode. Even if we did not activate it in our script, all the code that is in the class will be executed in a strict mode
+
+//SETTERS AND GETTERS
+const walter = new PersonCl('Walter White', 1965);
+const account = {
+    owner: 'jonas',
+    movements: [200, 530, 120, 300],
+
+    get latest(){
+        return this.movements.slice(-1).pop();
+    },
+
+    //any setter method needs to have exactly one parameter
+    set latest(mov){
+this.movements.push(mov)
+    }
+};
+
+//we don't call the get method, we write it as its just a prop
+console.log(account.latest);
+//it is not mandatory to specify a setter when we have a getter prop
+
+//using the setter
+account.latest = 50;
+console.log(account.movements);
+//a getter is just like any regular method we set on a prototype
+
+//setters and getters can be useful for data validation
+
+//STATIC METHODS
