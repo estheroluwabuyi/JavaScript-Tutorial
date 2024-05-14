@@ -141,7 +141,7 @@ bmw.accelerate();
 mercedes.accelerate();
 mercedes.brake();
 mercedes.accelerate();
-*/
+
 
 //ES6 CLASSES
 //class expression
@@ -155,6 +155,7 @@ class PersonCl {
         this.birthYear = birthYear
     }
     //methods will be added to the .prototype property
+    //instance method
     calcAge() {
 console.log(2024 - this.birthYear);
     }
@@ -176,6 +177,13 @@ console.log(2024 - this.birthYear);
     }
 get fullName(){
     return this._fullName
+}
+
+
+//static method
+static hey(){
+    console.log('Hey There👋');
+    console.log(this);
 }
 };
 //when we create a new instance, it is the constructor that is going to be called and it will return a new object and that will  e stored into our instance 'jessica'
@@ -225,3 +233,150 @@ console.log(account.movements);
 //setters and getters can be useful for data validation
 
 //STATIC METHODS
+
+const Person = function (fullName, birthYear) {
+    //filling the empty object;
+    //value name must be the exact same as the param passed. Tho, prop names can be diff..we could use any name as the prop name
+    //instance properties
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+
+    //never create a method inside of a constructor function
+    //adding methods
+    // this.calcAge = function () {
+    //     console.log(2024 - this.birthYear);
+    // }
+}
+
+const jonas = new Person('Jonas', 1991);
+console.log(jonas);
+
+Person.hey = function () {
+    console.log('Hey There👋');
+    console.log(this);
+};
+
+Person.hey();
+
+//for class. We would simply add the method inside the class syntax
+PersonCl.hey();
+
+
+//OBJECT.CREATE
+const PersonProto = {
+    calcAge(){
+        console.log(2037 - this.birthYear);
+    },
+
+    init(firstName, birthYear){
+        this.firstName = firstName;
+        this.birthYear =  birthYear;
+    }
+}
+
+const steven = Object.create(PersonProto);
+//returns a new object that is linked to the prototype that we  passed in here. Steve , an empty object will be linked to the PersonProto object
+console.log(steven);
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+steven.calcAge();
+
+console.log(steven);
+console.log(steven.__proto__ === PersonProto);
+
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1992);
+sarah.calcAge();
+//init function will now point to sarah, it does so because we explicitly called init on sarah
+
+
+//CODE CHALLENGE
+class CarCl{
+    constructor(make, speed){
+        this.make = make;
+        this.speed = speed;
+    }
+
+    accelerate(){
+        this.speed +=10;
+        console.log(`${this.make} is going at ${this.speed}km/h`);
+        };
+        
+        brake(){
+            this.speed -=5;
+            console.log(`${this.make} is going at ${this.speed}km/h`);
+         };
+        
+    get speedUS(){
+    // this.speed/=1.6;
+    // return `${this.make} is going at ${this.speed} mi/h`;
+    return this.speed /1.6
+    }
+
+    set speedUS(s){
+        this.speed = s * 1.6
+    }
+}
+
+const ford = new CarCl('Ford', 120);
+console.log(ford);
+console.log(ford.speedUS);
+ford.accelerate();
+ford.brake();
+ford.speedUS = 50;
+console.log(ford);
+*/
+
+//INHERITANCE BTW "CLASSES": CONSTRUCTOR FUNCTIONS
+//classes here means var name
+//parent child
+const Person = function (firstName, birthYear) {
+  
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+
+   Person.prototype.calcAge = function () {
+    console.log(2037 - this.birthYear);
+   }
+}
+
+//child class
+const Student = function(firstName, birthYear, course){
+    //call method calls a function and sets the this keyword inside it bcos this keyword on a regular functions results to undefine
+    Person.call(this, firstName, birthYear)
+    // this.firstName = firstName; //to avoid repetition
+    // this.birthYear = birthYear;
+    this.course = course;
+};
+
+
+//LINKING PROTOTYPES
+//with this, the Student.prototype object is now an object that inherits from the Person.prototype object.
+//We have to create this connection here👇👇 before we add any methods to the prototype object of Student. And thats because object.create will return an empty object..at this point Student.prototype is empty..on the empty object we can add methods. If we had written the `Student.prototype = Object.create(Person.prototype);` after the methods, Object.create would override the method/s its written after
+Student.prototype = Object.create(Person.prototype);
+
+
+Student.prototype.introduce = function () {
+    console.log(`My name is ${this.firstName}, and I study ${this.course}`);
+}
+
+const mike = new Student('Mike', 2020, 'Computer Science');
+console.log(mike);
+mike.introduce();
+mike.calcAge(); //despite calcAge not being inside the Student prototype, we were still able to access it from the Person prototype because of the prototype chain 
+
+//the whole idea of inheritance is that child classes can share the behavior from their parent classes
+//What we basically want to do now is to set the prototype of Student to the Person prototype
+//To link these 2 prototype objects, we are going to use Object.create, because defining prototypes manually is exactly what object.create does
+//CLASS INHERITANCE WORKS THE SAME IN ES6 CLASSES TOO. ALL THAT CHANGES IS THE SYNTAX
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+
+console.log(mike instanceof Student); //true
+console.log(mike instanceof Person); //true
+console.log(mike instanceof Object); //true
+
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor);
