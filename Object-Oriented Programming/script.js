@@ -186,6 +186,7 @@ static hey(){
     console.log(this);
 }
 };
+
 //when we create a new instance, it is the constructor that is going to be called and it will return a new object and that will  e stored into our instance 'jessica'
 const jessica = new PersonCl('Jessica Davies', 1996);
 console.log(jessica);
@@ -330,7 +331,7 @@ console.log(ford);
 
 //INHERITANCE BTW "CLASSES": CONSTRUCTOR FUNCTIONS
 //classes here means var name
-//parent child
+//parent class
 const Person = function (firstName, birthYear) {
   
     this.firstName = firstName;
@@ -380,7 +381,6 @@ console.log(mike instanceof Object); //true
 
 Student.prototype.constructor = Student;
 console.dir(Student.prototype.constructor);
-*/
 
 
 const Car = function (make, speed) {
@@ -429,3 +429,80 @@ tesla.chargeBattery(90);
 console.log(tesla);
 tesla.accelerate(); 
 //when there are 2 methods or props with the same same name in the prototype chain, then the first one that appears in the chain is the one thats going  to be used
+*/
+
+//INHERITANCE BTW "CLASSES": ES6 CLASSES
+class PersonCl {
+    constructor(fullName, birthYear){
+        //props for the object
+        this.fullName = fullName;
+        this.birthYear = birthYear
+    }
+    //methods will be added to the .prototype property
+    //instance method
+    calcAge() {
+console.log(2037 - this.birthYear);
+    }
+
+    get age() {
+        return 2024 - this.birthYear
+    }
+
+    //set prop that already exist
+    set fullName(name){
+        console.log(name);
+
+        if (name.includes(' ')) {
+            //creating a new var
+            this._fullName = name;
+        }else{
+            alert(`${name} is not a full name!`)
+        }
+    }
+get fullName(){
+    return this._fullName
+}
+
+
+//static method...not available in any other objects, just inside the PersonCl
+static hey(){
+    console.log('Hey There👋');
+    console.log(this);
+}
+};
+
+
+ //classes hides a layer of how things work BTS
+    //to make the child inherit from the parent, it needs the 'super' keyword and the 'extend' keyword
+class StudentCl extends PersonCl {
+   constructor(fullName, birthYear, course){
+    super(fullName, birthYear);
+    this.course = course;
+   }
+
+   introduce() {
+    console.log(`My name is ${this.fullName}, and I study ${this.course}`)
+   }
+calcAge(){
+    console.log(`I'm ${2037 - this.birthYear} years old, but as a student, I feel more like ${2037 - this.birthYear + 10}`);
+    //this new calcAge method override the PersonCl calcAge
+}
+}
+
+const martha = new StudentCl('Martha Jones', 2012, 'Computer Science');
+martha.introduce();
+martha.calcAge();
+
+//this will still work
+// class StudentCl extends PersonCl {
+
+// }
+// const martha = new StudentCl('Martha Jones', 2012)
+
+/*
+//Super keyword always needs to happen first, bcos the call to the super function is responsible for creating the this keyword in this subclass, and therefore without doing the 'super', we wont be able to access the this keyword to do 'this.course = course;'
+
+In the StudentCl class constructor, super(fullName, birthYear) calls the constructor of the parent class (Car in this case) with the arguments fullName and birthYear. This is necessary because the Car class has its own constructor that needs to be called to initialize the fullName and birthYear properties inherited by EV.
+
+Without super(fullName, birthYear), the fullName and birthYear properties wouldn't be initialized properly, and the inheritance chain would break. So, super ensures that the parent class constructor is called before initializing the properties specific to the EV class.
+ */
