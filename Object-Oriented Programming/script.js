@@ -499,12 +499,12 @@ martha.calcAge();
 // }
 // const martha = new StudentCl('Martha Jones', 2012)
 
-/*
+*/
 //Super keyword always needs to happen first, bcos the call to the super function is responsible for creating the this keyword in this subclass, and therefore without doing the 'super', we wont be able to access the this keyword to do 'this.course = course;'
 
-In the StudentCl class constructor, super(fullName, birthYear) calls the constructor of the parent class (Car in this case) with the arguments fullName and birthYear. This is necessary because the Car class has its own constructor that needs to be called to initialize the fullName and birthYear properties inherited by EV.
+// In the StudentCl class constructor, super(fullName, birthYear) calls the constructor of the parent class (Car in this case) with the arguments fullName and birthYear. This is necessary because the Car class has its own constructor that needs to be called to initialize the fullName and birthYear properties inherited by EV.
 
-Without super(fullName, birthYear), the fullName and birthYear properties wouldn't be initialized properly, and the inheritance chain would break. So, super ensures that the parent class constructor is called before initializing the properties specific to the EV class.
+// Without super(fullName, birthYear), the fullName and birthYear properties wouldn't be initialized properly, and the inheritance chain would break. So, super ensures that the parent class constructor is called before initializing the properties specific to the EV class.
 
 
 //INHERITANCE BTW "CLASSES": OBJECT.CREATE
@@ -538,17 +538,20 @@ jay.init('Jay Clay', 2010, 'Computer Science');
 console.log(jay);
 jay.calcAge();
 jay.introduce();
-*/
+
 
 //ANOTHER CLASS EXAMPLE
 class Account {
   constructor(owner, currency, pin) {
     this.owner = owner;
     this.currency = currency;
-    this.pin = pin;
+    this._pin = pin;
 
     //to create more props on instance...props that are not based on any input;
-    this.movements = [];
+    // this.movements = [];
+    //for data encapsulation on props. This does'nt make the prop truly private..this is just a convention. Since  its nt truly private, we call it protected. This convention simply let us and other developers know that the prop is not supposed to be outside of the class
+    //protected property
+    this._movements = [];
     this.locale = navigator.language;
 
     //we can evn execute any code right in the constructor if we want;
@@ -556,8 +559,11 @@ class Account {
   }
 
   //Public Interface of our objects..API
+  getMovement(){
+    return this._movements;
+  }
   deposit(val) {
-    this.movements.push(val);
+    this._movements.push(val);
   }
 
   withdraw(val) {
@@ -565,12 +571,12 @@ class Account {
   }
 
   //this approveLoan method should be a method that only requestLoan should be able to access...data encapsulation and data privacy
-  approveLoan(val) {
+  _approveLoan(val) {
     return true;
   }
 
   requestLoan(vall) {
-    if (this.approveLoan(vall)) {
+    if (this._approveLoan(vall)) {
       this.deposit(vall);
       console.log(`Loan Approved`);
     }
@@ -580,15 +586,18 @@ class Account {
 const acc1 = new Account('Jonas', 'EUR', 1111);
 console.log(acc1);
 
-// acc1.movements.push(250);
-// acc1.movements.push(-140);
+// acc1._movements.push(250);
+// acc1._movements.push(-140);
 
 acc1.deposit(250);
 acc1.withdraw(140);
 acc1.requestLoan(1000)
 // acc1.movements.push(-140); //will still work
+
+console.log(acc1.getMovement());
+
 console.log(acc1);
-console.log(acc1.pin);
+console.log(acc1._pin);
 //its not  a good idea to interact with props like this; 'acc1.movements.push(250);'...its better to create methods that interact with these props
 
 
@@ -597,3 +606,4 @@ console.log(acc1.pin);
 //2 big reasons for data encapsulation;
 //1. To prevent code from outside of the class to accidentally manipulate our code from outside of the class
 //2. When we expose only a small interface, then we can change  all the other internal methods with more confidence, because we can be sure that external codes does not rely on this private methods. Therefore our code wil not break when we do internal changes.
+//JS classes do no yet support real data privacy and encapsulation
