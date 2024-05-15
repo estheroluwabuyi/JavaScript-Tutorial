@@ -1,6 +1,6 @@
 'use script';
 //CONSTRUCTOR FUNCTIONS AND THE NEW OPERATOR
-//We can use constructor function to build an object using a function. A constructor function is a completely normal function. The only diff btw a constructor function and a regular function is that we call the constructor function with the new operator. We should constructor functions with capital letters. We can use the function expression and function statement for constructor functions. But the arrow function wont work because it does not have its own this keyword and we need that. 
+//We can use constructor function to build an object using a function. A constructor function is a completely normal function. The only diff btw a constructor function and a regular function is that we call the constructor function with the new operator. We should constructor functions with capital letters. We can use the function expression and function statement for constructor functions. But the arrow function wont work because it does not have its own this keyword and we need that.
 
 // const Person = function (fullName, birthYear) {
 //     //filling the empty object;
@@ -18,7 +18,6 @@
 
 // const jonas = new Person('Jonas', 1991);
 // console.log(jonas);
-
 
 // //what happens when we call a regular function with the new operator?
 // // BTS these happen 4 steps;
@@ -47,7 +46,7 @@
 
 // Person.prototype.calcAge = function () {
 //     console.log(2024 - this.birthYear);
-    
+
 // }
 
 // jonas.calcAge();
@@ -95,7 +94,6 @@
 
 // //the prototype prop of the constructor 'Array.prototype' is going to be the prototype of all the objects created by that constructor
 
-
 // // const a = new Array (28999, 66777, 'hhc');
 // // console.log(a);
 // // console.log(arr);
@@ -114,7 +112,7 @@
 // console.dir(x => x + 1);
 // //functions are objects too thats why we can call methods on it
 
-// CODE CHALLENGE
+// CODE CHALLENGE 1
 /*const Car = function (make, speed) {
     this.make = make;
     this.speed = speed;
@@ -292,7 +290,7 @@ sarah.calcAge();
 //init function will now point to sarah, it does so because we explicitly called init on sarah
 
 
-//CODE CHALLENGE
+//CODE CHALLENGE 2
 class CarCl{
     constructor(make, speed){
         this.make = make;
@@ -383,6 +381,7 @@ Student.prototype.constructor = Student;
 console.dir(Student.prototype.constructor);
 
 
+//CODE CHALLENGE 3
 const Car = function (make, speed) {
     this.make = make;
     this.speed = speed;
@@ -397,8 +396,6 @@ Car.prototype.brake = function () {
     this.speed -= 5;
     console.log(`${this.make} is going at ${this.speed}km/h`);
 };
-
-
 
 
 const EV = function (make, speed, charge) {
@@ -429,7 +426,7 @@ tesla.chargeBattery(90);
 console.log(tesla);
 tesla.accelerate(); 
 //when there are 2 methods or props with the same same name in the prototype chain, then the first one that appears in the chain is the one thats going  to be used
-*/
+
 
 //INHERITANCE BTW "CLASSES": ES6 CLASSES
 class PersonCl {
@@ -471,6 +468,9 @@ static hey(){
 }
 };
 
+PersonCl.hey()
+
+
 
  //classes hides a layer of how things work BTS
     //to make the child inherit from the parent, it needs the 'super' keyword and the 'extend' keyword
@@ -481,7 +481,7 @@ class StudentCl extends PersonCl {
    }
 
    introduce() {
-    console.log(`My name is ${this.fullName}, and I study ${this.course}`)
+    console.log(`My name is ${this.fullName}, and I study ${this.course}`);
    }
 calcAge(){
     console.log(`I'm ${2037 - this.birthYear} years old, but as a student, I feel more like ${2037 - this.birthYear + 10}`);
@@ -505,4 +505,95 @@ martha.calcAge();
 In the StudentCl class constructor, super(fullName, birthYear) calls the constructor of the parent class (Car in this case) with the arguments fullName and birthYear. This is necessary because the Car class has its own constructor that needs to be called to initialize the fullName and birthYear properties inherited by EV.
 
 Without super(fullName, birthYear), the fullName and birthYear properties wouldn't be initialized properly, and the inheritance chain would break. So, super ensures that the parent class constructor is called before initializing the properties specific to the EV class.
- */
+
+
+//INHERITANCE BTW "CLASSES": OBJECT.CREATE
+const PersonProto = {
+    calcAge(){
+        console.log(2037 - this.birthYear);
+    },
+
+    init(firstName, birthYear){
+        this.firstName = firstName;
+        this.birthYear =  birthYear;
+    }
+}
+
+const steven = Object.create(PersonProto);
+
+const StudentProto = Object.create(PersonProto);
+StudentProto.init = function (firstName, birthYear, course) {
+    PersonProto.init.call(this, firstName, birthYear);
+    this.course = course;
+};
+
+StudentProto.introduce = function () {
+    console.log(`My name is ${this.firstName}, and I study ${this.course}`);
+}
+
+const jay = Object.create(StudentProto);
+//StudentProto is now the prototype of the jay object. PersonProto is in turn the prototype of StudentProto. PersonProto is a parent prototype of jay because its in its prototype chain
+
+jay.init('Jay Clay', 2010, 'Computer Science');
+console.log(jay);
+jay.calcAge();
+jay.introduce();
+*/
+
+//ANOTHER CLASS EXAMPLE
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+
+    //to create more props on instance...props that are not based on any input;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    //we can evn execute any code right in the constructor if we want;
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  //Public Interface of our objects..API
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  //this approveLoan method should be a method that only requestLoan should be able to access...data encapsulation and data privacy
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(vall) {
+    if (this.approveLoan(vall)) {
+      this.deposit(vall);
+      console.log(`Loan Approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+console.log(acc1);
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000)
+// acc1.movements.push(-140); //will still work
+console.log(acc1);
+console.log(acc1.pin);
+//its not  a good idea to interact with props like this; 'acc1.movements.push(250);'...its better to create methods that interact with these props
+
+
+//Encapsulation: Protected Props and Methods
+//encapsulation basically means to keep some props and methods private inside the class, so that they are not accessible from outside of the class, then the rest of the methods are basically exposed as a public interface, which we can also call API.
+//2 big reasons for data encapsulation;
+//1. To prevent code from outside of the class to accidentally manipulate our code from outside of the class
+//2. When we expose only a small interface, then we can change  all the other internal methods with more confidence, because we can be sure that external codes does not rely on this private methods. Therefore our code wil not break when we do internal changes.
