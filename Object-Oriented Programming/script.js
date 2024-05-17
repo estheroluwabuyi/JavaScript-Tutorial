@@ -499,7 +499,7 @@ martha.calcAge();
 // }
 // const martha = new StudentCl('Martha Jones', 2012)
 
-*/
+
 //Super keyword always needs to happen first, bcos the call to the super function is responsible for creating the this keyword in this subclass, and therefore without doing the 'super', we wont be able to access the this keyword to do 'this.course = course;'
 
 // In the StudentCl class constructor, super(fullName, birthYear) calls the constructor of the parent class (Car in this case) with the arguments fullName and birthYear. This is necessary because the Car class has its own constructor that needs to be called to initialize the fullName and birthYear properties inherited by EV.
@@ -538,6 +538,7 @@ jay.init('Jay Clay', 2010, 'Computer Science');
 console.log(jay);
 jay.calcAge();
 jay.introduce();
+
 
 
 //ANOTHER CLASS EXAMPLE
@@ -599,7 +600,7 @@ console.log(acc1.getMovement());
 console.log(acc1);
 console.log(acc1._pin);
 //its not  a good idea to interact with props like this; 'acc1.movements.push(250);'...its better to create methods that interact with these props
-
+*/
 
 //Encapsulation: Protected Props and Methods
 //encapsulation basically means to keep some props and methods private inside the class, so that they are not accessible from outside of the class, then the rest of the methods are basically exposed as a public interface, which we can also call API.
@@ -607,3 +608,141 @@ console.log(acc1._pin);
 //1. To prevent code from outside of the class to accidentally manipulate our code from outside of the class
 //2. When we expose only a small interface, then we can change  all the other internal methods with more confidence, because we can be sure that external codes does not rely on this private methods. Therefore our code wil not break when we do internal changes.
 //JS classes do no yet support real data privacy and encapsulation
+
+//Encapsulation: Private Class Fields and Methods
+//Private Class Fields nd Methods are part of a bigger proposal for improving and changing javascript classes which is simply called Class Fields. This Class Fields is currently at stage 3 and not yet part of the JS language. However being at stage 3, its very likely that at some point it will move forward to stage 4 and it would become a part of JS language. In the proposal, there are 8 diff kinds of fields and methods...but we'd  focus on 4;
+//1) Public fields
+//2) Private fields
+//3) Public methods
+//4) Private methods
+//Besides all these methods, we also have the static version all these 4
+
+//1) PUBLIC FIELDS
+//We can think of a public field as a prop that would be on all instances, thats  why we can also call public fields a 'public instance fields'. Public fields will be present on all instances that we are creating thru the class..but they are not on the prototype. Public fields are also referenceable  by the this keyword
+
+//2) PRIVATE FIELDS
+//With private fields, we can now make it so that props are really truly not accessible from the outside. # symbol is the syntax that makes a field private in this new class proposal. We'd get a syntax error when we try to read the #movements outside the class. Private fields must be declared in enclosing class. Remember that private fields are to be outside the constructor function. Again private fields are present on all instances and not the prototype.
+
+//3) PUBLIC METHODS
+//All the methods we've been using inside the class are public
+
+//4)PRIVATE METHODS
+//Are very useful to hide the implementation details from the outside
+
+
+class Account {
+    //PUBLIC FIELDS(instances)
+    locale = navigator.language;
+
+    //PRIVATE FIELDS
+    #movements = [];
+    //we did this because the pin property is set to a constructor function pram value. We basically just declare it without setting any thing to it.
+    #pin;
+
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  //Public Interface / Public methods
+  getMovement() {
+    return this.#movements;
+  }
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  requestLoan(vall) {
+    if (this.#approveLoan(vall)) {
+      this.deposit(vall);
+      console.log(`Loan Approved`);
+    }
+  }
+
+  //static method--only available on class and not on instances. We can only call this method with the class name e.g Account.helper();
+  static helper(){
+    return `${true} or ${false} Helper`;
+  }
+
+  // Private methods
+  #approveLoan(val) {
+    return true;
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+//we can still use this method to get the movements
+console.log(acc1.getMovement());
+
+console.log(acc1);
+
+//we'd get a syntax error when we try to read the #movements outside the class
+// console.log(acc1.#movements);
+// console.log(acc1.#pin);
+// console.log(acc1.#approveLoan);
+
+
+console.log(Account.helper());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function cla(param) {
+//     return `The ${param} was just returned!`
+//     // console.log(`The ${param} has just been returned!`);
+// };
+// // cla('money')
+// console.log(cla('money'));
