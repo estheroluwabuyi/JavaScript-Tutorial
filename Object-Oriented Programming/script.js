@@ -1,4 +1,7 @@
 'use script';
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //CONSTRUCTOR FUNCTIONS AND THE NEW OPERATOR
 //We can use constructor function to build an object using a function. A constructor function is a completely normal function. The only diff btw a constructor function and a regular function is that we call the constructor function with the new operator. We should constructor functions with capital letters. We can use the function expression and function statement for constructor functions. But the arrow function wont work because it does not have its own this keyword and we need that.
 
@@ -141,6 +144,9 @@ mercedes.brake();
 mercedes.accelerate();
 
 
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //ES6 CLASSES
 //class expression
 // const PersonCl = class{}
@@ -204,6 +210,10 @@ jessica.greet();
 //2. Classes are also first class citizens just like functions...this means that we can pass them into functions and also return them from functions. This is because classes ara really just another kind of function behind the scenes
 //3. Classes are executed in strict mode. Even if we did not activate it in our script, all the code that is in the class will be executed in a strict mode
 
+
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //SETTERS AND GETTERS
 const walter = new PersonCl('Walter White', 1965);
 const account = {
@@ -231,8 +241,11 @@ console.log(account.movements);
 
 //setters and getters can be useful for data validation
 
-//STATIC METHODS
 
+
+/////////////////////////////////////////
+///////////////////////////////////////
+//STATIC METHODS
 const Person = function (fullName, birthYear) {
     //filling the empty object;
     //value name must be the exact same as the param passed. Tho, prop names can be diff..we could use any name as the prop name
@@ -261,7 +274,10 @@ Person.hey();
 PersonCl.hey();
 
 
-//OBJECT.CREATE
+
+/////////////////////////////////////////
+///////////////////////////////////////
+//OBJECT.CREATE 
 const PersonProto = {
     calcAge(){
         console.log(2037 - this.birthYear);
@@ -327,6 +343,9 @@ ford.speedUS = 50;
 console.log(ford);
 
 
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //INHERITANCE BTW "CLASSES": CONSTRUCTOR FUNCTIONS
 //classes here means var name
 //parent class
@@ -428,6 +447,10 @@ tesla.accelerate();
 //when there are 2 methods or props with the same same name in the prototype chain, then the first one that appears in the chain is the one thats going  to be used
 
 
+
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //INHERITANCE BTW "CLASSES": ES6 CLASSES
 class PersonCl {
     constructor(fullName, birthYear){
@@ -470,8 +493,6 @@ static hey(){
 
 PersonCl.hey()
 
-
-
  //classes hides a layer of how things work BTS
     //to make the child inherit from the parent, it needs the 'super' keyword and the 'extend' keyword
 class StudentCl extends PersonCl {
@@ -507,6 +528,9 @@ martha.calcAge();
 // Without super(fullName, birthYear), the fullName and birthYear properties wouldn't be initialized properly, and the inheritance chain would break. So, super ensures that the parent class constructor is called before initializing the properties specific to the EV class.
 
 
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //INHERITANCE BTW "CLASSES": OBJECT.CREATE
 const PersonProto = {
     calcAge(){
@@ -541,6 +565,8 @@ jay.introduce();
 
 
 
+/////////////////////////////////////////
+///////////////////////////////////////
 //ANOTHER CLASS EXAMPLE
 class Account {
   constructor(owner, currency, pin) {
@@ -602,8 +628,11 @@ console.log(acc1._pin);
 //its not  a good idea to interact with props like this; 'acc1.movements.push(250);'...its better to create methods that interact with these props
 */
 
+
+/////////////////////////////////////////
+///////////////////////////////////////
 //Encapsulation: Protected Props and Methods
-//encapsulation basically means to keep some props and methods private inside the class, so that they are not accessible from outside of the class, then the rest of the methods are basically exposed as a public interface, which we can also call API.
+//encapsulation basically means to keep some props and methods are private inside the class, so that they are not accessible from outside of the class, then the rest of the methods are basically exposed as a public interface, which we can also call API.
 //2 big reasons for data encapsulation;
 //1. To prevent code from outside of the class to accidentally manipulate our code from outside of the class
 //2. When we expose only a small interface, then we can change  all the other internal methods with more confidence, because we can be sure that external codes does not rely on this private methods. Therefore our code wil not break when we do internal changes.
@@ -629,6 +658,8 @@ console.log(acc1._pin);
 //4)PRIVATE METHODS
 //Are very useful to hide the implementation details from the outside
 
+//Static keyword is also  used to make fields static as well. Only available in the in the class
+
 
 class Account {
     //PUBLIC FIELDS(instances)
@@ -638,6 +669,9 @@ class Account {
     #movements = [];
     //we did this because the pin property is set to a constructor function pram value. We basically just declare it without setting any thing to it.
     #pin;
+
+    //STATIC KEYWORD ON FIELDS
+    static numSubject = 10; //can be accessed only in the class
 
 
   constructor(owner, currency, pin) {
@@ -656,16 +690,19 @@ class Account {
   }
   deposit(val) {
     this.#movements.push(val);
+    return this;
   }
 
   withdraw(val) {
     this.deposit(-val);
+    return this;
   }
 
   requestLoan(vall) {
     if (this.#approveLoan(vall)) {
       this.deposit(vall);
       console.log(`Loan Approved`);
+    return this;
     }
   }
 
@@ -699,45 +736,115 @@ console.log(acc1);
 console.log(Account.helper());
 
 
+// const person = {
+//     name: "Sarah",
+//     age: 32
+//   };
+  
+//   // Get all values
+//   Object.keys(person).forEach(val => {
+//     console.log(val); 
+//   });
+
+//   Object.entries(person).forEach(([key, val]) => {
+//     console.log(`${key}: ${val}`);  
+//   });
+
+
+//   function square(x) {
+//     return x ** 2; 
+//   }
+  
+//   console.log(square(3));
+
+
+/////////////////////////////////////////
+///////////////////////////////////////
+//Chaining Methods
+//returning the this keyword inside the methods makes the methods chainable
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+
+console.log(acc1);
+console.log(acc1.getMovement());
+
+
+/////////////////////////////////////////
+///////////////////////////////////////
+//ES6 CLASSES SUMMARY
+//Remember that the extends keyword when working with classes will automatically set the prototype chain for us, so we dont have to do it manually
+//Public fields are very similar to just props we defined in the constructor
+//static keyword  used to make fields static as well. Only available in the in the class
+//Constructors can be ignored in a child class if we want it to have same number of parameters and same names as its parent
+//super needs to happen before we can access the this keyword in the child class. super is necessary with extend. It calls to parent
 
 
 
+/* 
+/////////////////////////////////////////
+///////////////////////////////////////
+//CODING CHALLENGE 4
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+    return this;
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+}
 
 
 
+class EVCl extends CarCl {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    return this;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(
+      `${this.make} is going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }`
+    );
+    return this;
+  }
+}
 
 
+const rivian = new EVCl('Rivian', 120, 23)
+console.log(rivian);
+rivian.accelerate().accelerate().accelerate().brake().chargeBattery(50).accelerate();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//the child class can get and set props
+console.log(rivian.speedUS);
+*/
 
 
 // function cla(param) {
