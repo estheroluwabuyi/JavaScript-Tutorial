@@ -24,62 +24,87 @@ const inputElevation = document.querySelector('.form__input--elevation');
 ///////////////////////
 //////////////////////
 // USING GEOLOCATION API
-navigator.geolocation.getCurrentPosition(
-  function (position) {
-    // Called with a parameter named 'position'
-    // console.log(position);
-    // const latitude = position.coords.latitude;
-    const { latitude } = position.coords; //same as above but destructured
-    const { longitude } = position.coords;
-    // console.log(latitude, longitude);
+let map, mapEvent;
 
-    console.log(`https://www.google.com/maps/@${latitude},${longitude}
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      // Called with a parameter named 'position'
+      // console.log(position);
+      // const latitude = position.coords.latitude;
+      const { latitude } = position.coords; //same as above but destructured
+      const { longitude } = position.coords;
+      // console.log(latitude, longitude);
+
+      console.log(`https://www.google.com/maps/@${latitude},${longitude}
         `);
-    //the latitude and longitude defined here same as the one destructured above.
+      //the latitude and longitude defined here same as the one destructured above.
 
-    //LEAFLET API
-    const coords = [latitude, longitude];
-    console.log(coords);
+      //LEAFLET API
+      const coords = [latitude, longitude];
+      console.log(coords);
 
-    const map = L.map('map').setView(coords, 13);
-    //13 is the zoom level of the map
-    //L is namespace that leaflet gives us. The L has a couple of methods that we can use. One is the maps method, another is the tileLayer and marker
+      map = L.map('map').setView(coords, 13);
+      //13 is the zoom level of the map
+      //L is namespace that leaflet gives us. The L has a couple of methods that we can use. One is the maps method, another is the tileLayer and marker
 
-    // console.log(map);
-    //https://tile.openstreetmap.org/{z}/{x}/{y}.png....we can change the theme of the map displayed..browse fo themes
-    L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-      attribution:
-        //the maps layers are made up of small tiles and these tiles come from openstreetmap url
+      // console.log(map);
+      //https://tile.openstreetmap.org/{z}/{x}/{y}.png....we can change the theme of the map displayed..browse fo themes
+      //the maps layers are made up of small tiles and these tiles come from openstreetmap url
+      L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
 
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
+      //Handling Clicks on Map
+      map.on('click', function (mapE) {
+        mapEvent = mapE;
+        form.classList.remove('hidden');
+        inputDistance.focus();
+      });
+    },
+    function () {
+      alert('Could not get your position');
+    }
+  );
+}
 
-    map.on('click', function (mapEvent) {
-      console.log(mapEvent);
-      const { lat, lng } = mapEvent.latlng;
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
 
-      L.marker([lat, lng])
-        //L.marker creates the marker
-        .addTo(map)
-        //adds marker to map
-        .bindPopup(
-          L.popup({
-            maxWidth: 250,
-            minWidth: 100,
-            autoClose: false,
-            closeOnClick: false,
-            className: 'running-popup',
-          })
-        )
-        //creates popup and bind to the marker
-        .setPopupContent('Workout')
-        .openPopup();
-    });
-  },
-  function () {
-    alert('Could not get your position');
-  }
-);
+  //Clear Input Fields
+  inputDistance.value =
+    inputDuration.value =
+    inputCadence.value =
+    inputElevation.value =
+      '';
+
+  // Display Marker
+  console.log(mapEvent);
+  const { lat, lng } = mapEvent.latlng;
+
+  L.marker([lat, lng])
+    //L.marker creates the marker
+    .addTo(map)
+    //adds marker to map
+    .bindPopup(
+      L.popup({
+        maxWidth: 250,
+        minWidth: 100,
+        autoClose: false,
+        closeOnClick: false,
+        className: 'running-popup',
+      })
+    )
+    //creates popup and bind to the marker
+    .setPopupContent('Workout')
+    .openPopup();
+});
+
+inputType.addEventListener('change', function () {
+  inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+});
 
 // getCurrentPosition() takes in 2 callback functions.
 // First is the one that would be called on success -
@@ -97,3 +122,12 @@ navigator.geolocation.getCurrentPosition(
 /////////////////////////
 /////////////////////////
 //DISPLAYING A MAP MARKER
+
+/////////////////////////
+/////////////////////////
+//RENDERING A MAP MARKER
+
+/////////////////////////
+/////////////////////////
+//PROJECT ARCHITECTURE
+//1. Determine where and how to store the data. Data is the most fundamental part of an application. Without data, it doesnt make sense to have an app in the first placei ,
