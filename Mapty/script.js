@@ -21,11 +21,156 @@ const inputElevation = document.querySelector('.form__input--elevation');
 4. Project Architecture
 */
 
+
 ///////////////////////
 //////////////////////
-// USING GEOLOCATION API
-let map, mapEvent;
+// MANAGING WORKOUT DATA: CREATING CLASSES
+class Workout{
+    date = new Date();
+    id = (Date.now() + '').slice(-10);
+    // id = (new Date() + '').slice(-10);
+  
+    constructor(coords, distance, duration){
+  this.coords = coords; // [lat, lng]
+  this.distance = distance; //in km
+  this.duration = duration; //in min
+  
+    }
+  
+  }
+  
+  class Running extends Workout{
+  constructor(coords, distance, duration, cadence){
+  super(coords, distance, duration);
+  this.cadence = cadence;
+  this.calcPace();
+  }
+  
+  calcPace (){
+    //min/km
+    this.pace = this.duration  / this.distance;
+    return this.pace;
+  }
+  }
+  
+  class Cycling extends Workout{
+    constructor(coords, distance, duration, elevationGain){
+      super(coords, distance, duration);
+      this.elevationGain = elevationGain;
+    this.calcSpeed();
+    }
+  
+    calcSpeed (){
+      //km/h
+      this.speed = this.distance / (this.duration / 60);
+      //we divided duration by 60 because duration is in hours
+      return this.speed;
+    }
+  }
+  
+  
+  const run1 = new Running([39, -12], 5.2, 24, 178);
+  const cycling1 = new Cycling([39, -12], 27, 95, 523);
+  console.log(run1);
+  console.log(cycling1);
+  
 
+///////////////////////
+//////////////////////
+//REFACTORING FOR PROJECT ARCHITECTURE
+class App {
+  #map;
+  #mapEvent;
+
+  constructor() {
+    this._getPosition();
+
+    form.addEventListener('submit', this._newWorkout.bind(this));
+    //with the bind method, instead of the this keyword pointing to form, it would now point to App
+
+    inputType.addEventListener('change', this._toggleElevationField);
+  }
+
+// USING GEOLOCATION API
+  _getPosition() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        this._loadMap.bind(this),
+        function () {
+          alert('Could not get your position');
+        }
+      );
+    }
+  }
+
+  _loadMap(position) {
+    const { latitude } = position.coords;
+    const { longitude } = position.coords;
+
+    console.log(`https://www.google.com/maps/@${latitude},${longitude}
+        `);
+
+    //LEAFLET API
+    const coords = [latitude, longitude];
+    console.log(coords);
+
+    this.#map = L.map('map').setView(coords, 13);
+
+    L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(this.#map);
+
+    //Handling Clicks on Map
+    this.#map.on('click', this._showForm.bind(this));
+  }
+
+  _showForm(mapE) {
+    this.#mapEvent = mapE;
+    form.classList.remove('hidden');
+    inputDistance.focus();
+  }
+
+  _toggleElevationField() {
+    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+  }
+
+  _newWorkout(e) {
+    e.preventDefault();
+
+    //Clear Input Fields
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
+
+    // Display Marker
+    const { lat, lng } = this.#mapEvent.latlng;
+
+    L.marker([lat, lng])
+      //L.marker creates the marker
+      .addTo(this.#map)
+      //adds marker to map
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 100,
+          autoClose: false,
+          closeOnClick: false,
+          className: 'running-popup',
+        })
+      )
+      //creates popup and bind to the marker
+      .setPopupContent('Workout')
+      .openPopup();
+  }
+}
+
+const app = new App();
+
+/*
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
     function (position) {
@@ -68,7 +213,9 @@ if (navigator.geolocation) {
     }
   );
 }
+*/
 
+/*
 form.addEventListener('submit', function (e) {
   e.preventDefault();
 
@@ -105,6 +252,7 @@ inputType.addEventListener('change', function () {
   inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
   inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
+*/
 
 // getCurrentPosition() takes in 2 callback functions.
 // First is the one that would be called on success -
@@ -130,4 +278,4 @@ inputType.addEventListener('change', function () {
 /////////////////////////
 /////////////////////////
 //PROJECT ARCHITECTURE
-//1. Determine where and how to store the data. Data is the most fundamental part of an application. Without data, it doesnt make sense to have an app in the first placei ,
+//1. Determine where and how to store the data. Data is the most fundamental part of an application. Without data, it doesnt make sense to have an app in the first place
