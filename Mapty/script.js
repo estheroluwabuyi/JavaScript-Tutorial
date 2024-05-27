@@ -17,6 +17,9 @@ class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
   // id = (new Date() + '').slice(-10);
+  clicks = 0;
+
+
 
   constructor(coords, distance, duration) {
     this.coords = coords; // [lat, lng]
@@ -31,6 +34,10 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
+  }
+
+  click(){
+    this.clicks++;
   }
 }
 
@@ -70,10 +77,10 @@ class Cycling extends Workout {
   }
 }
 
-const run1 = new Running([39, -12], 5.2, 24, 178);
-const cycling1 = new Cycling([39, -12], 27, 95, 523);
-console.log(run1);
-console.log(cycling1);
+// const run1 = new Running([39, -12], 5.2, 24, 178);
+// const cycling1 = new Cycling([39, -12], 27, 95, 523);
+// console.log(run1);
+// console.log(cycling1);
 
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
@@ -83,6 +90,7 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+
 ///////////////////////
 //////////////////////
 //REFACTORING FOR PROJECT ARCHITECTURE
@@ -90,14 +98,20 @@ class App {
   #map;
   #mapEvent;
   #workouts = [];
+  #mapZoomLevel = 13;
 
   constructor() {
+    //Get users position
     this._getPosition();
+
+    //Get data from localStorage
+    this._getLocalStorage();
 
     form.addEventListener('submit', this._newWorkout.bind(this));
     //with the bind method, instead of the this keyword pointing to form, it would now point to App
 
     inputType.addEventListener('change', this._toggleElevationField);
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
 
   // USING GEOLOCATION API
@@ -123,7 +137,7 @@ class App {
     const coords = [latitude, longitude];
     console.log(coords);
 
-    this.#map = L.map('map').setView(coords, 13);
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
 
     L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       attribution:
@@ -132,6 +146,12 @@ class App {
 
     //Handling Clicks on Map
     this.#map.on('click', this._showForm.bind(this));
+
+    
+   this.#workouts.forEach(work => {
+    this._renderWorkoutMarker(work);
+   })
+  
   }
 
   _showForm(mapE) {
@@ -218,7 +238,11 @@ class App {
 
     //HIDE FORM + CLEAR INPUT FIELDS
     this._hideForm();
+
+    //Set local storage to all workouts
+    this._setLocalStorage();
   }
+
 
   _renderWorkoutMarker(workout) {
     // Display Marker
@@ -294,9 +318,91 @@ class App {
 
     form.insertAdjacentHTML('afterend', html);
   }
+
+  _moveToPopup(e){
+const workoutEl = e.target.closest('.workout');
+// console.log(workoutEl);
+
+if (!workoutEl) return;
+
+
+const workout = this.#workouts.find(work =>  work.id === workoutEl.dataset.id);
+console.log(workout);
+
+//moving to marker on click still using the leaflet API. The setView method needs 3 parameters;  the coord as the first argument, the second is the zoom level and the third is the  obj of options
+this.#map.setView(workout.coords, this.#mapZoomLevel, {
+  animate: true,
+  pan: {duration: 1} //animation duration
+});
+
+
+  //using the public interface
+  // workout.clicks(); 
+  }
+
+  //Setting the localStorage
+  _setLocalStorage(){
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+    //with this , we have set all the workouts to a local storage
+  }
+
+  //Displaying the localStorage
+  _getLocalStorage(){
+   const data = JSON.parse(localStorage.getItem('workouts'));
+   console.log(data);
+
+   if (!data) return;
+   
+   this.#workouts = data;
+
+   this.#workouts.forEach(work => {
+    this._renderWorkout(work);
+   })
+  }
+
 }
 
 const app = new App();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 if (navigator.geolocation) {
