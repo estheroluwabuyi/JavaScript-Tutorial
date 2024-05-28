@@ -135,7 +135,7 @@ class App {
 
     //LEAFLET API
     const coords = [latitude, longitude];
-    console.log(coords);
+    // console.log(coords);
 
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
 
@@ -336,8 +336,8 @@ this.#map.setView(workout.coords, this.#mapZoomLevel, {
 });
 
 
-  //using the public interface
-  // workout.clicks(); 
+  // using the public interface
+  // workout.clicks();  
   }
 
   //Setting the localStorage
@@ -349,7 +349,7 @@ this.#map.setView(workout.coords, this.#mapZoomLevel, {
   //Displaying the localStorage
   _getLocalStorage(){
    const data = JSON.parse(localStorage.getItem('workouts'));
-   console.log(data);
+  //  console.log(data);
 
    if (!data) return;
    
@@ -358,6 +358,13 @@ this.#map.setView(workout.coords, this.#mapZoomLevel, {
    this.#workouts.forEach(work => {
     this._renderWorkout(work);
    })
+  }
+
+  //Clearing the data
+//call app.reset() in console to reset app
+  reset(){
+    localStorage.removeItem('workouts');
+    location.reload();
   }
 
 }
