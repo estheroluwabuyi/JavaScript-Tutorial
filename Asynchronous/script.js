@@ -55,17 +55,15 @@ getCountryData('usa');
 //we cant control which one finish first
 */
 
-/*
 //WELCOME TO CALLBACK HELL
 //We are going to create a sequence of AJAX calls so that the first one second one runs only after the first one has finished
 
 const renderCountry = function (data, className = '') {
-
   const html = `
   <article class="country ${className}">
         <img class="country__img" src="${data.flags.png}" alt='${
-  data.flags.alt
-}' />
+    data.flags.alt
+  }' />
         <div class="country__data">
           <h3 class="country__name">${data.name.common}</h3>
           <h4 class="country__region">${data.region}</h4>
@@ -82,11 +80,11 @@ const renderCountry = function (data, className = '') {
       </article>
   `;
 
-countriesContainer.insertAdjacentHTML('beforeend', html);
-countriesContainer.style.opacity = 1;
-}
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
 
-
+/*
 const getCountryAndNeighbour = function (country) {
 
   // AJAX call country 1
@@ -155,5 +153,28 @@ setTimeout(() => {
 //  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
 //  request.send();
 
-const request = fetch('https://restcountries.com/v3.1/name/portugal');
-console.log(request);
+//CONSUMING PROMISES
+// const request = fetch('https://restcountries.com/v3.1/name/portugal');
+// console.log(request);
+
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v3.1/name/${country}`)
+//     .then(function (response) {
+//       console.log(response);
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//       renderCountry(data[0]);
+//     });
+// };
+
+//SIMPLIFIED VERSION with arr function
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+
+    .then(data => renderCountry(data[0]));
+};
+
+getCountryData('portugal');
