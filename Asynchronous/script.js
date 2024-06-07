@@ -87,7 +87,7 @@ const renderCountry = function (data, className = '') {
 const renderErr = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
 
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 /*
@@ -311,6 +311,7 @@ getCountryData('uuii');
 // };
 
 
+/*
 const getJSON = function (url, errorMsg = 'Something went wrong') {
   return fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
@@ -352,6 +353,8 @@ const getCountryData = function (country) {
 btn.addEventListener('click', function () {
   getCountryData('portugal');
 });
+
+*/
 
 
 /*
@@ -407,6 +410,52 @@ TEST COORDINATES 2: 19.037, 72.873
 TEST COORDINATES 2: -33.933, 18.474
 
 GOOD LUCK 😀
+
+//CODE SOLUTION
+const whereAmI = function (lat, lng) {
+  fetch(`https://geocode.xyz/${lat},${lng}?json=1?json`)
+  .then(response => {
+if (!response.ok) throw new Error(`Problem with geocoding ${response.status}`);
+console.log(response);
+  return response.json();
+  })
+  .then(data => {
+   console.log(data);
+
+   console.log(`You are in ${data.city}, ${data.country}.`);
+
+   return fetch(`https://restcountries.com/v3.1/name/${data.country}`)
+  })
+  .then(response => {
+          if (!response.ok)
+            throw new Error(`Country not found (${response.status})`);
+    
+          return response.json();
+        })
+        .then(data =>{ renderCountry(data[0]) 
+ } )
+  .catch(err => console.log(`${err.message} 💥`))
+}
+
+whereAmI(52.508, 13.381);
+whereAmI(19.037, 72.873);
+whereAmI(-33.933, 18.474);
 */
 
-//ASYNCHRONOUS BEHIND THE SCENES: THE EVENT LOOP
+
+
+
+
+// ASYNCHRONOUS BEHIND THE SCENES: THE EVENT LOOP
+//THE EVENT LOOP IN PRACTICE
+console.log('Test start');
+setTimeout(() => console.log('0 sec timer'), 0); //4th log
+Promise.resolve('Resolved Promise 1').then(res => console.log(res)); 
+Promise.resolve('Resolved Promise 2').then(res => { 
+  for (let i = 0; i < 5000; i++) { 
+    console.log('ress');
+  }
+  console.log(res);
+}); 
+
+console.log('Test end');
