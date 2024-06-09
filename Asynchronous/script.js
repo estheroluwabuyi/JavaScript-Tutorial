@@ -511,12 +511,14 @@ const getPosition = function () {
     //     position => resolve(position),
     //     err => reject(err)
     //   );
-  });
 
   navigator.geolocation.getCurrentPosition(resolve, reject); //same as above
+  });
+
 };
 
-getPosition().then(pos =>  console.log(pos));
+
+// getPosition().then(pos =>  console.log(pos));
 
 // console.log('Getting Position');
 
@@ -525,6 +527,7 @@ getPosition().then(pos => {
   const {latitude: lat, longitude: lng} = pos.coords;
 
   return fetch(`https://geocode.xyz/${lat},${lng}?json=1?json`);
+  
 
 })
   .then(response => {
@@ -550,5 +553,4 @@ console.log(response);
   .catch(err => console.log(`${err.message} 💥`))
 }
 
-btn.addEventListener('click', whereAmI)
-getPosition()
+btn.addEventListener('click', whereAmI);
