@@ -551,3 +551,4 @@ console.log(response);
 }
 
 btn.addEventListener('click', whereAmI)
+getPosition()
