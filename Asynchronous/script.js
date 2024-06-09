@@ -267,7 +267,6 @@ getCountryData('uuii');
 });
 */
 
-
 //THROWING ERRORS MANUALLY
 // const getCountryData = function (country) {
 //   //country 1
@@ -309,7 +308,6 @@ getCountryData('uuii');
 //       countriesContainer.style.opacity = 1;
 //     });
 // };
-
 
 /*
 const getJSON = function (url, errorMsg = 'Something went wrong') {
@@ -356,7 +354,6 @@ btn.addEventListener('click', function () {
 
 */
 
-
 /*
 const getCountryData = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
@@ -383,7 +380,6 @@ const getCountryData = function (country) {
 
 getCountryData('portugal');
 */
-
 
 //////////////////////////////////////
 // Coding Challenge #1
@@ -442,10 +438,7 @@ whereAmI(19.037, 72.873);
 whereAmI(-33.933, 18.474);
 */
 
-
-
-
-
+/*
 // ASYNCHRONOUS BEHIND THE SCENES: THE EVENT LOOP
 //THE EVENT LOOP IN PRACTICE
 console.log('Test start');
@@ -459,3 +452,102 @@ Promise.resolve('Resolved Promise 2').then(res => {
 }); 
 
 console.log('Test end');
+
+
+// BUILDING A SIMPLE PROMISE
+const lotteryPromise = new Promise(function (resolve, reject) {
+
+  console.log('Lottery draw is happening 🔮');
+
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You WIN 💰');
+    } else {
+      reject(new Error('You lost your money 💩'));
+    }
+  }, 2000);
+
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+//Promisifying setTimeout:
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000)
+  })
+};
+
+wait(2).then(() => {
+  console.log(`1 second passed`);
+
+  return wait(1);
+}).then(() => {
+  console.log(`2 second passed`);
+
+  return wait(1);
+}).then(() => {
+  console.log(`3 second passed`);
+
+  return wait(1);
+}).then(() => console.log('4 second passed'));
+
+// The then() will not receive any fulfilled value in our callback because we left the resolved() empty
+
+//Another way to instantly create a fulfilled or rejected promise
+Promise.resolve('ABC').then(x => console.log(x));
+Promise.reject(new Error('Errorrr!')).catch(x => console.error(x));
+*/
+
+//PROMISIFYING THE GEOLOCATION API
+// navigator.geolocation.getCurrentPosition(
+//   position => resolve(position),
+//   err => reject(err)
+// );
+
+//Promisifying a Callback based API to a promise based API
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    //   navigator.geolocation.getCurrentPosition(
+    //     position => resolve(position),
+    //     err => reject(err)
+    //   );
+  });
+
+  navigator.geolocation.getCurrentPosition(resolve, reject); //same as above
+};
+
+getPosition().then(pos =>  console.log(pos));
+
+// console.log('Getting Position');
+
+const whereAmI = function (lat, lng) {
+getPosition().then(pos => {
+  const {latitude: lat, longitude: lng} = pos.coords;
+
+  return fetch(`https://geocode.xyz/${lat},${lng}?json=1?json`);
+
+})
+  .then(response => {
+if (!response.ok) throw new Error(`Problem with geocoding ${response.status}`);
+console.log(response);
+  return response.json();
+  })
+  .then(data => {
+   console.log(data);
+
+   console.log(`You are in ${data.city}, ${data.country}.`);
+
+   return fetch(`https://restcountries.com/v3.1/name/${data.country}`)
+  })
+  .then(response => {
+          if (!response.ok)
+            throw new Error(`Country not found (${response.status})`);
+    
+          return response.json();
+        })
+        .then(data =>{ renderCountry(data[0]) 
+ } )
+  .catch(err => console.log(`${err.message} 💥`))
+}
+
+btn.addEventListener('click', whereAmI)
