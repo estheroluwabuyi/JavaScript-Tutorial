@@ -637,30 +637,95 @@ const getPosition = function () {
 };
 
 const whereAmI = async function () {
-  //GeoLocation
-  const pos = await getPosition();
-  const { latitude: lat, longitude: lng } = pos.coords;
+  try {
+    //GeoLocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  //Reverse geoCoding
-  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?json=1?json`);
-  const dataGeo = await resGeo.json();
-  console.log(dataGeo);
+    //Reverse geoCoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?json=1?json`);
+    if (!resGeo.ok) throw new Error(`Problem getting country`);
+    //this line of code not working on my system because I'm not getting a 404 error for the geoCoding api...just some 'throttled' junk
+    const dataGeo = await resGeo.json();
 
-  //Country Data
-  const res = await fetch(
-    `https://restcountries.com/v3.1/name/${dataGeo.country}`
-  );
-  console.log(res);
+    //Country Data
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo.country}`
+    );
+    const data = await res.json();
+    renderCountry(data[0]);
 
-  const data = await res.json();
+    //Returning Values From Async Function
+    return `You are in ${dataGeo.city}, ${dataGeo.country}`;
+    //however, if any error occurs in the try block, this return will never be reached because the code will immediately jump to the catch block.
+  } catch (err) {
+    console.log(err);
+    renderErr(` 💥 ${err.message}`);
 
-  console.log(data);
-
-  renderCountry(data[0]);
+    //Reject Promise returned from async function
+    throw err;
+  }
 };
 
-whereAmI();
-console.log('FIRST');
+console.log('1: Will get Location');
+
+// const city = whereAmI();
+// console.log(city); //This will return a promise and be displayed in this order..at this point JS has no idea of what will be returned at this point. The fulfilled value of the promise will be this return "You are..." string because that is the value that we returned in the async function
+
+/* 
+whereAmI()
+  .then(city => console.log(`2: ${city}`))
+  .catch(err => console.log(`2: ${err.message} 💥`))
+  .finally(() => console.log(`3: Finished getting location`)); 
+//This will get the resolved value of the promise..the return 'You are in..' Despite the error  in our try block(async function), this console is still running(though logs undefined). This means that the promise returned by the async func is still fulfilled and not rejected. To catch the error, we have rethrow the error
+*/
+
+(async function () {
+  try {
+  const city = await whereAmI();
+  console.log(`2: ${city}`);
+  } catch (err) {
+    console.log(`2: ${err.message} 💥`)
+  }
+  console.log(`3: Finished getting location`)
+})();
+
+//ERROR HANDLING WITH TRY...CATCH
+// try{
+//   let y = 1;
+//   const x = 2;
+//  x = 3;
+// }catch(err){
+// alert(err.message);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ///////////////////////////////////////
 // Coding Challenge #3
