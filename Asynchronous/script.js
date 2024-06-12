@@ -760,16 +760,36 @@ const timeout = function (sec) {
   });
 };
 
-Promise.race([
-    getJSON(`https://restcountries.com/v3.1/name/uk`), timeout(0.2)],
-).then(res => console.log(res[0])).catch(err => console.error(err))
+Promise.race([getJSON(`https://restcountries.com/v3.1/name/uk`), timeout(0.2)])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err));
 
-//Promise.allSettled
+  Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('Error'),
+  Promise.resolve('Another Success'),
+])
+.then(res => console.log(res))
+.catch(err => console.error(err));
 
+// 2. Promise.allSettled
+//Pretty new(ES2020) and very simple. It takes in an array of promises and it will simply return an array of all the settled promises. No matter if  the promise got rejected or not. Its similar to promise.all as it also returns an array of all the results. The diff is that promise.all will short circuit as soon as one promise rejects, but promise.allSettled never short circuits. It would simply return all the results of the promises
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('Error'),
+  Promise.resolve('Another Success'),
+])
+.then(res => console.log(res));
 
-
-
-
+//Promise.any
+// Promise(ES2021). It takes in array of multiple promises and then return the first fulfilled promise and would simply ignore rejected promises. The result of promise.any is always going to be a fulfilled promise unless all of them reject. Does not return an array
+Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('Error'),
+  Promise.resolve('Another Success'),
+])
+.then(res => console.log(res))
+.catch(err => console.error(err));
 
 
 
