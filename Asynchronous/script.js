@@ -90,6 +90,14 @@ const renderErr = function (msg) {
   countriesContainer.style.opacity = 1;
 };
 
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
 /*
 const getCountryAndNeighbour = function (country) {
 
@@ -629,7 +637,7 @@ return createImage('img/img-2.jpg');
   console.log(res).then(res => console.log(res)); */
 
 //You know this returns a new promise, right? But instead of chaining another then method, we simply use the await statement and store the automatically returned promise of the await in a variable
-
+/*
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -678,7 +686,7 @@ whereAmI()
   .catch(err => console.log(`2: ${err.message} 💥`))
   .finally(() => console.log(`3: Finished getting location`)); 
 //This will get the resolved value of the promise..the return 'You are in..' Despite the error  in our try block(async function), this console is still running(though logs undefined). This means that the promise returned by the async func is still fulfilled and not rejected. To catch the error, we have rethrow the error
-*/
+
 
 (async function () {
   try {
@@ -698,13 +706,65 @@ whereAmI()
 // }catch(err){
 // alert(err.message);
 // }
+*/
 
+/*
+//Running Promises in Parallel
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+    // console.log(data1.capital, data2.capital, data3.capital);
 
+    //Even though each data did not have any attachment to each other, all of them will still wait until everything has finish loaded before displaying everything (they all run/load in sequence)..does not make lot of sense
+    //Promise.all
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
 
+    console.log(data.map(d => d[0].capital));
 
+  } catch (err) {
+    console.log(err);
+  }
+};
 
+get3Countries('portugal', 'canada', 'tanzania');
+*/
 
+//Instead of running the promises in sequence, we can run them in parallel..all at the same time, saving valuable loading time, making the 3 load at the same time..each takes half a second, with that, wed basically save 1 second. To do that, we use the promise.all combinator function.
+//Promise.all is a helper function on the promise constructor, its a static method. This function takes in an array of promises and it wil return a new promise, which will then run all the promises in the array at the same time. We can the handle the returned promise by like prev by calling the await on it and storing it in a var. Promise.all receives an array and also returns an array. One thing worthy of noting is that, if one of the promisees rejects, the whole promise.all rejects as well. We say promise.all short circuits when one promise rejects. Whenever you need to do multiple async operations at the same time(operations that dont depend on one  another), you should always run them in parallel using promise.all.
 
+//Other Promise Combinators: race, allSettled and any
+//Promise.race:
+//Just like all other combinators, it receives an array of promises and returns a promise. The promise returned by the promise.race is settled as soon as one of the input promise is settled. And settled means that a value is available, but it doesn't matter if the promise got rejected or fulfilled. In promise.race, the first settled promise wins the race.
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.com/v3.1/name/italy`),
+    getJSON(`https://restcountries.com/v3.1/name/egypt`),
+    getJSON(`https://restcountries.com/v3.1/name/mexico`),
+  ]);
+
+  console.log(res[0]);
+})();
+//All this wil basically race against each other and if the winning promise is  fulfilled promise, then the fulfillment value of the whole promise.race is going to be the fulfillment value of the winning promise.  In promise.race, we only get 1 result and an array of the result of  the 3. A promise that gets rejected can also win the race. Promise.race is useful to prevent against never ending an also very long running promises.
+//Lets say the users network is slow, we can use the promise.race to reject ones it reaches a certain timeout;
+const timeout = function (sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(() => {
+      reject(new Error('Request took too long!'));
+    }, sec * 1000);
+  });
+};
+
+Promise.race([
+    getJSON(`https://restcountries.com/v3.1/name/uk`), timeout(0.2)],
+).then(res => console.log(res[0])).catch(err => console.error(err))
+
+//Promise.allSettled
 
 
 
