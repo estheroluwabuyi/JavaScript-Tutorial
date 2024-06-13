@@ -736,8 +736,9 @@ get3Countries('portugal', 'canada', 'tanzania');
 */
 
 //Instead of running the promises in sequence, we can run them in parallel..all at the same time, saving valuable loading time, making the 3 load at the same time..each takes half a second, with that, wed basically save 1 second. To do that, we use the promise.all combinator function.
-//Promise.all is a helper function on the promise constructor, its a static method. This function takes in an array of promises and it wil return a new promise, which will then run all the promises in the array at the same time. We can the handle the returned promise by like prev by calling the await on it and storing it in a var. Promise.all receives an array and also returns an array. One thing worthy of noting is that, if one of the promisees rejects, the whole promise.all rejects as well. We say promise.all short circuits when one promise rejects. Whenever you need to do multiple async operations at the same time(operations that dont depend on one  another), you should always run them in parallel using promise.all.
+//Promise.all is a helper function on the promise constructor, its a static method. This function takes in an array of promises and it wil return a new promise, which will then run all the promises in the array at the same time. We can the handle the returned promise by like prev by calling the await on it and storing it in a var. Promise.all receives an array and also returns an array. One thing worthy of noting is that, if one of the promisees rejects, the whole promise.all rejects as well. We say promise.all short circuits when one promise rejects. Whenever you need to do multiple async operations at the same time(operations that don't depend on one  another), you should always run them in parallel using promise.all.
 
+/*
 //Other Promise Combinators: race, allSettled and any
 //Promise.race:
 //Just like all other combinators, it receives an array of promises and returns a promise. The promise returned by the promise.race is settled as soon as one of the input promise is settled. And settled means that a value is available, but it doesn't matter if the promise got rejected or fulfilled. In promise.race, the first settled promise wins the race.
@@ -750,7 +751,7 @@ get3Countries('portugal', 'canada', 'tanzania');
 
   console.log(res[0]);
 })();
-//All this wil basically race against each other and if the winning promise is  fulfilled promise, then the fulfillment value of the whole promise.race is going to be the fulfillment value of the winning promise.  In promise.race, we only get 1 result and an array of the result of  the 3. A promise that gets rejected can also win the race. Promise.race is useful to prevent against never ending an also very long running promises.
+//All this wil basically race against each other and if the winning promise is fulfilled promise, then the fulfillment value of the whole promise.race is going to be the fulfillment value of the winning promise.  In promise.race, we only get 1 result and an array of the result of  the 3. A promise that gets rejected can also win the race. Promise.race is useful to prevent against never ending an also very long running promises.
 //Lets say the users network is slow, we can use the promise.race to reject ones it reaches a certain timeout;
 const timeout = function (sec) {
   return new Promise(function (_, reject) {
@@ -790,22 +791,7 @@ Promise.any([
 ])
 .then(res => console.log(res))
 .catch(err => console.error(err));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 ///////////////////////////////////////
 // Coding Challenge #3
@@ -826,3 +812,75 @@ TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn of
 
 GOOD LUCK 😀
 */
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+const imgContainer = document.querySelector('.images');
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const newImg = document.createElement('img');
+    newImg.src = imgPath;
+
+    newImg.addEventListener('load', () => {
+      imgContainer.append(newImg);
+
+      resolve(newImg);
+    });
+
+    newImg.addEventListener('error', () => {
+      reject(new Error('Image not found'));
+    });
+  });
+};
+
+//SOLUTION
+//PART 1
+const loadNPause = async function () {
+  try {
+    //load image 1
+    let img = await createImage('img/img-1.jpg');
+    console.log('Image 1 loaded');
+    await wait(2);
+   img.style.display = 'none';
+
+    //load image 2
+     img = await createImage('img/img-2.jpg');
+    console.log('Image 2 loaded');
+    await wait(2);
+    img.style.display = 'none';
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// loadNPause();
+
+//PART 2
+const loadAll = async function (imgArr) {
+  try {
+    const imgs = imgArr.map(async img => await createImage(img));
+ 
+
+   const imgEl = await Promise.all(imgs);
+   console.log(imgEl);
+   imgEl.forEach(img => img.classList.add('parallel'));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
+
+// const arr = [1,2,2,4,3,5,9,6];
+// const newArr = arr.map((num, i) => {
+//   // return   num * 2;
+//   // console.log(`${i + 1}: ${num *3}`);
+//   return `${i + 1}: ${num *3}`;
+//   return 24;
+// });
+// // console.log(arr);
+// console.log(newArr);
