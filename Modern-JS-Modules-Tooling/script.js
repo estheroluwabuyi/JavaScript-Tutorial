@@ -1,3 +1,4 @@
+/**
 //Importing Module
 // import { addToCart, totalPrice as price, QT } from "./shoppingCart.js";
 
@@ -57,3 +58,78 @@ const getLastPost = async function () {
 
 const lastPost2 = await getLastPost();
 console.log(lastPost2);
+
+import shoppingCart from "./shoppingCart";
+ */
+
+/**
+//The Module Pattern
+const ShoppingCart2 =(function () {
+  const cart = [];
+  const shippingCost = 10;
+  const  totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart =  function (product, quantity) {
+    cart.push({product, quantity});
+    console.log(`${quantity} ${product} added to cart (shipping cost is ${shippingCost})`);
+    //even tho shippingCost was not exported, this function was still able to access it..happened because of closures (A function is able to access the var in his birthplace)
+}
+
+const orderStock = function (product, quantity) {
+  cart.push({product, quantity});
+  console.log(`${quantity} ${product} ordered from supplier`);
+}
+
+// We'd return an object which contains the stuff that we want to make public. The var we didn't pass in here (pass in) wont be made public
+return{
+addToCart,
+cart,
+totalPrice,
+totalQuantity,
+}
+//We could have however defined these vars in the obj
+})();
+
+ShoppingCart2.addToCart('apples', 4);
+ShoppingCart2.addToCart('pizza', 2);
+console.log(ShoppingCart2);
+console.log(ShoppingCart2.totalQuantity);
+// console.log(ShoppingCart2.shippingCost); //we'd get undefined for this cause it was made private...not exported
+*/
+
+/*
+//CommonJS Modules
+//Export...all these wont work in our browser but will work in nodejs
+export.addToCart = function (product, quantity) {
+  cart.push({product, quantity});
+  console.log(`${quantity} ${product} ordered from supplier`);
+}
+
+//Import
+const {addToCart} = require('./shoppingCart.js');
+ */
+
+//A BRIEF INTRODUCTION TO THE COMMAND LINE
+//Introduction To NPM
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+
+  user: { loggedIn: true },
+};
+const stateClone = Object.assign({}, state); //t create a copy of an obj
+
+console.log(stateClone);
+ //Although this was cloned, its still a copy of the state obj. We can see that when we changed the value of user.loggedIn, it also reflected in the stateClone. This tells us that stateClone is not a just a clone but a copy of state. To fix this, we'd uses the lodash cloneDeep module
+
+//Lodash cloneDeep.js module
+const stateDeepClone = cloneDeep(state);
+console.log(stateDeepClone); //this is truly cloned. It retained its values
+// stateDeepClone.user.loggedIn = 'YES'
+
+state.user.loggedIn = false;
