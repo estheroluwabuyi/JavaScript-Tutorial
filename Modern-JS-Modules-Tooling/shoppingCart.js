@@ -4,9 +4,9 @@
 console.log('Exporting Module');
 
 //Blocking Code
-console.log('Start fetching users');
+// console.log('Start fetching users');
 // await  fetch('https://jsonplaceholder.typicode.com/posts');
-console.log('Finish Fetching Users');
+// console.log('Finish Fetching Users');
 
 //Variables declared inside a module are scoped to the current module
 const shippingCost = 10;

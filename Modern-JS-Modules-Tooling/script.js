@@ -1,4 +1,4 @@
-/**
+
 //Importing Module
 // import { addToCart, totalPrice as price, QT } from "./shoppingCart.js";
 
@@ -34,7 +34,7 @@ console.log(cart);
 //imports are not copies of the export but a live connection because they point to same place in memory
 
 
-
+/**
 //TOP-LEVEL AWAIT
 // console.log('Start Fetching');
 
@@ -62,7 +62,7 @@ console.log(lastPost2);
 import shoppingCart from "./shoppingCart";
  */
 
-/**
+/*
 //The Module Pattern
 const ShoppingCart2 =(function () {
   const cart = [];
@@ -110,9 +110,10 @@ export.addToCart = function (product, quantity) {
 const {addToCart} = require('./shoppingCart.js');
  */
 
-//A BRIEF INTRODUCTION TO THE COMMAND LINE
+
 //Introduction To NPM
-import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+// import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+import cloneDeep from 'lodash-es';
 
 const state = {
   cart: [
@@ -129,7 +130,21 @@ console.log(stateClone);
 
 //Lodash cloneDeep.js module
 const stateDeepClone = cloneDeep(state);
-console.log(stateDeepClone); //this is truly cloned. It retained its values
-// stateDeepClone.user.loggedIn = 'YES'
 
 state.user.loggedIn = false;
+
+console.log(stateDeepClone);
+//this is truly cloned. It retained its values even tho the original value from where its cloned from was replaced
+// stateDeepClone.user.loggedIn = 'YES'
+
+
+//To activate HOT MODULE REPLACEMENT FOR PARCEL (Only parcel understands this line of code..browser dont understand so it wont make it to our final bundle)
+if (module.hot) {
+  module.hot.accept()
+} //What this line of code is saying is that whenever we change something in the code, it wont reload the page..it just gets auto injected.
+
+  //  "test": "echo \"Error: no test specified\" && exit 1"
+
+//   "start": "parcel index.html",
+//  "build": "parcel build index"
+//  "main": "script.js",
