@@ -143,6 +143,68 @@ if (module.hot) {
   module.hot.accept()
 } //What this line of code is saying is that whenever we change something in the code, it wont reload the page..it just gets auto injected.
 
+//CONFIGURING BABEL AND POLYFILLING
+class Person {
+  #greeting = 'Hey'
+  constructor(name){
+    this.name = name;
+    console.log(`${this.#greeting}, ${this.name}`);
+  }
+}
+const jonas = new Person('Jonas');
+console.log('Jonas' ?? null);
+
+console.log(cart.find(el => el.quantity >= 2));
+Promise.resolve('TEST').then(x => console.log(x));
+
+// import 'core-js/stable';
+// import 'core-js/stable/array/find'
+// import 'core-js/stable/promise'
+
+//Polyfilling async function
+import 'regenerator-runtime/runtime.js'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //  "test": "echo \"Error: no test specified\" && exit 1"
 
 //   "start": "parcel index.html",

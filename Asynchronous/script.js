@@ -632,6 +632,7 @@ return createImage('img/img-2.jpg');
   .catch(err => console.log(err));
 */
 
+
 //CONSUMING PROMISES WITH ASYNC/AWAIT
 /*fetch(`https://restcountries.com/v3.1/name/${country}`);
   console.log(res).then(res => console.log(res)); */
