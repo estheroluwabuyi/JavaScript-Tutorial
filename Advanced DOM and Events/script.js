@@ -387,7 +387,7 @@ function slider() {
     }
   });
   //target is the child, currentTarget is the parent element
-}
+};
 slider();
 
 //////////////////
