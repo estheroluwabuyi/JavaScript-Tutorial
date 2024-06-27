@@ -4,3 +4,10 @@ Modern-JS-Modules-Tooling/package.json
 Modern-JS-Modules-Tooling/.parcel-cache
 Modern-JS-Modules-Tooling/dist
 Modern-JS-Modules-Tooling/package-lock
+Forkify/node_modules/
+Forkify/package-lock.json
+Forkify/package.json
+Forkify/.parcel-cache
+Forkify/dist
+Forkify/package-lock
+Forkify/.prettierrc
