@@ -38,10 +38,17 @@ const renderSpinner = function (parentEl) {
 
 const showRecipe = async function () {
   try {
+    //Monitoring the hashchange
+    const id = window.location.hash.slice(1);
+    console.log(id);
+
+    if(!id) return; //that is if no id, return too the normal state without any err
+
+
     // 1.) Loading Recipe
     renderSpinner(recipeContainer); //Happens before and while API loads in bg
     const res = await fetch(
-      'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886'
+      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
       // 'https://forkify-api.herokuapp.com/api/v2/recipes/664c8f193e7aa067e94e856b'
     );
     const data = await res.json();
@@ -156,5 +163,39 @@ const showRecipe = async function () {
   }
 };
 showRecipe();
+
+//Nice and easy way of handling more than one event listener
+// window.addEventListener('hashchange', showRecipe)
+// window.addEventListener('load', showRecipe)
+
+['hashchange', 'load'].forEach(ev => window.addEventListener(ev, showRecipe));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //.join('') on thr map method converts the array to a string
