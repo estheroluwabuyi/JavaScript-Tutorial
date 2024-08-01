@@ -1,4 +1,5 @@
 import { async } from 'regenerator-runtime';
+import { API_URL } from './config';
 
 //so the state obj is basically what we are going to keep referring to in the controller.js
 export const state = {
@@ -9,16 +10,17 @@ export const state = {
 export const loadRecipe = async function (id) {
   try {
     const res = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
+      `${API_URL}/${id}`
       // 'https://forkify-api.herokuapp.com/api/v2/recipes/664c8f193e7aa067e94e856b'
     );
     const data = await res.json();
     if (!res.ok) throw new Error(`${data.message} (${res.status})`);
 
     const { recipe } = data.data;
+    // const  reciper  = data.data.recipe; 
 
     state.recipe = {
-      id: recipe.id,
+      id: recipe.id, //recipe referred to here is; const  reciper  = data.data.recipe;
       title: recipe.title,
       publisher: recipe.publisher,
       sourceUrl: recipe.source_url,
