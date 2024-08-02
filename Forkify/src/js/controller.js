@@ -47,15 +47,14 @@ const controlRecipes = async function () {
     recipeView.render(model.state.recipe);
      //OOP---RecipeView method
   } catch (err) {
-    alert(err);
+   
+    
+    recipeView.renderError()
   }
 };
-controlRecipes();
 
-//Nice and easy way of handling more than one event listener
-// window.addEventListener('hashchange', controlRecipes)
-// window.addEventListener('load', controlRecipes)
 
-['hashchange', 'load'].forEach(ev => window.addEventListener(ev, controlRecipes));
-
-//.join('') on the map method converts the array to a string
+const init = function () {
+  recipeView.addHandlerRender(controlRecipes)
+};
+init();

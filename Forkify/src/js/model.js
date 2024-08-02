@@ -10,10 +10,10 @@ export const state = {
 //function responsible for fetching the recipe data from our forkify API
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}/${id}`)
-    
+    const data = await getJSON(`${API_URL}/${id}`);
+
     const { recipe } = data.data;
-    // const  reciper  = data.data.recipe; 
+    // const  reciper  = data.data.recipe;
 
     state.recipe = {
       id: recipe.id, //recipe referred to here is; const  reciper  = data.data.recipe;
@@ -28,8 +28,8 @@ export const loadRecipe = async function (id) {
 
     console.log(state.recipe);
   } catch (err) {
-    // alert(err);
     //Temporary Error Handler
     console.log(`${err} 💥💥💥`);
+    throw err;
   }
 };
