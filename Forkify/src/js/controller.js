@@ -1,6 +1,7 @@
 //Importing Others
 import * as model from './model.js'; //this would import everything from model.js
 import recipeView from './views/recipeView.js'; //default module
+import searchView from './views/searchView.js';
 
 //Importing images
 //The images in our html wont show because they are the real html file with src path diff from the one in the parcel html file with diff path. We however need to import those images. In parcel, we can import all kinds of assets(including images) and files and not just javascript file;
@@ -10,30 +11,26 @@ import recipeView from './views/recipeView.js'; //default module
 // importing packages
 import 'core-js/stable'; //Polyfilling js features like Promise,Array.from, Object.assign,
 import 'regenerator-runtime/runtime'; //Polyfilling async/await
+import searchView from './views/searchView.js';
 // import recipeView from './views/recipeView.js';
 
 ///////////////////
 //////////////////
-const recipeContainer = document.querySelector('.recipe');
-
-
 
 // https://forkify-api.herokuapp.com/v2
 
 ///////////////////////////////////////
 
-
 const controlRecipes = async function () {
   try {
     //Monitoring the hashchange
     const id = window.location.hash.slice(1);
-    console.log(id);
 
-    if (!id) return; 
+    if (!id) return;
     //that is if no id, return to the normal state without any err
 
     //Rendering Spinner (recipeView.js)
-    recipeView.renderSpinner(); 
+    recipeView.renderSpinner();
     //Happens before and while API loads in bg
 
     // 1.) Loading Recipe (model.js)
@@ -45,16 +42,28 @@ const controlRecipes = async function () {
     // 2.) Rendering Recipe (model.js)
     // const recipeView = new recipeView(model.state.recipe)
     recipeView.render(model.state.recipe);
-     //OOP---RecipeView method
+    //OOP---RecipeView method
   } catch (err) {
-   
-    
-    recipeView.renderError()
+    recipeView.renderError();
   }
 };
 
+const controlSearchResults = async function () {
+  try {
+    // 1) Get search query
+    const query = searchView.getQuery();
+    if(!query) return;
+
+    // 2) Load search results
+    await model.loadSearchResults(query);
+
+    // 3) Rendering results
+console.log(model.state.search.results);
+  } catch (err) {}
+};
 
 const init = function () {
-  recipeView.addHandlerRender(controlRecipes)
+  recipeView.addHandlerRender(controlRecipes);
+  searchView.addHandlerSearch(controlSearchResults);
 };
 init();

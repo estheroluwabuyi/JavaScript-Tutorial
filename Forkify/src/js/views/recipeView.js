@@ -1,6 +1,5 @@
 import icons from 'url:../../img/icons.svg';
 import { Fraction } from 'fractional'; //converts decimal numbers to fractions
-console.log({ Fraction });
 
 class RecipeView {
   #parentElement = document.querySelector('.recipe');

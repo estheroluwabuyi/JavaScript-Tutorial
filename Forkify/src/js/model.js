@@ -5,12 +5,17 @@ import { getJSON } from './helpers.js';
 //so the state obj is basically what we are going to keep referring to in the controller.js
 export const state = {
   recipe: {},
+
+  search: {
+    query: '',
+    results: [],
+  },
 };
 
 //function responsible for fetching the recipe data from our forkify API
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}/${id}`);
+    const data = await getJSON(`${API_URL}${id}`);
 
     const { recipe } = data.data;
     // const  reciper  = data.data.recipe;
@@ -26,10 +31,34 @@ export const loadRecipe = async function (id) {
       ingredients: recipe.ingredients,
     };
 
-    console.log(state.recipe);
+   
   } catch (err) {
     //Temporary Error Handler
     console.log(`${err} 💥💥💥`);
     throw err;
   }
 };
+
+export const loadSearchResults = async function (query) {
+  try {
+    state.search.query = query;
+
+    const data = await getJSON(`${API_URL}?search=${query}`);
+    console.log(data);
+
+    state.search.results = data.data.recipes.map(recipe => {
+      return {
+        id: recipe.id,
+        title: recipe.title,
+        publisher: recipe.publisher,
+        image: recipe.image_url,
+        //we map this because the recipes are inside an array. Doing this will get the recipes from its current array to a new array with a new obj
+      };
+    });
+
+  } catch (err) {
+    console.log(`${err} 💥💥💥`);
+    throw err;
+  }
+};
+
