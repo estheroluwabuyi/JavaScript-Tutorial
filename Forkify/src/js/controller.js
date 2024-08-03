@@ -2,6 +2,12 @@
 import * as model from './model.js'; //this would import everything from model.js
 import recipeView from './views/recipeView.js'; //default module
 import searchView from './views/searchView.js';
+import resultsView from './views/resultsView.js';
+
+if (module.hot) {
+  module.hot.accept();
+  //this basically stops th constant reload of page when a code is added  or removed-it maintains the state
+}
 
 //Importing images
 //The images in our html wont show because they are the real html file with src path diff from the one in the parcel html file with diff path. We however need to import those images. In parcel, we can import all kinds of assets(including images) and files and not just javascript file;
@@ -50,15 +56,18 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
+    resultsView.renderSpinner();
+
     // 1) Get search query
     const query = searchView.getQuery();
-    if(!query) return;
+    if (!query) return;
 
     // 2) Load search results
     await model.loadSearchResults(query);
 
     // 3) Rendering results
-console.log(model.state.search.results);
+
+    resultsView.render(model.state.search.results);
   } catch (err) {}
 };
 
