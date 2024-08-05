@@ -1,5 +1,5 @@
 import { async } from 'regenerator-runtime';
-import { API_URL } from './config.js';
+import { API_URL, RESULT_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
 
 //so the state obj is basically what we are going to keep referring to in the controller.js
@@ -9,6 +9,7 @@ export const state = {
   search: {
     query: '',
     results: [],
+    resultsPerPage: RESULT_PER_PAGE,
   },
 };
 
@@ -30,8 +31,6 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-
-   
   } catch (err) {
     //Temporary Error Handler
     console.log(`${err} 💥💥💥`);
@@ -55,10 +54,14 @@ export const loadSearchResults = async function (query) {
         //we map this because the recipes are inside an array. Doing this will get the recipes from its current array to a new array with a new obj
       };
     });
-
   } catch (err) {
     console.log(`${err} 💥💥💥`);
     throw err;
   }
 };
 
+export const getSearchResultsPage = function (page) {
+  const start = (page - 1) * state.search.resultsPerPage;
+  const end = page * state.search.resultsPerPage;
+  return state.search.results.slice(start, end);
+};
