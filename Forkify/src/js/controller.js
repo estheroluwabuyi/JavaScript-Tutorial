@@ -62,12 +62,13 @@ const controlSearchResults = async function () {
     const query = searchView.getQuery();
     if (!query) return;
 
-    // 2) Load search results
+    // 2) Load search riceresults
     await model.loadSearchResults(query);
 
     // 3) Rendering results
 
-    resultsView.render(model.state.search.results);
+    // resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPerPage())
   
   } catch (err) {}
 };
