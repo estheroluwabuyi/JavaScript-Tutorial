@@ -3,6 +3,7 @@ import * as model from './model.js'; //this would import everything from model.j
 import recipeView from './views/recipeView.js'; //default module
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
+import paginationView from './views/paginationView.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -62,13 +63,16 @@ const controlSearchResults = async function () {
     const query = searchView.getQuery();
     if (!query) return;
 
-    // 2) Load search riceresults
+    // 2) Load search results
     await model.loadSearchResults(query);
 
     // 3) Rendering results
 
     // resultsView.render(model.state.search.results);
-    resultsView.render(model.getSearchResultsPerPage())
+    resultsView.render(model.getSearchResultsPerPage(2));
+
+    // 4) Render the initial pagination btns
+    paginationView.render(model.state.search);
   
   } catch (err) {}
 };
