@@ -48,7 +48,7 @@ export default class View {
               <div>
                 <svg>
                   <use href="${icons}#icon-alert-smile"></use>
-                </svg>
+             npm   </svg>
               </div>
               <p>${message}</p>
             </div> `;
