@@ -51,7 +51,8 @@ const controlRecipes = async function () {
     // 2.) Rendering Recipe (model.js)
     // const recipeView = new recipeView(model.state.recipe)
     recipeView.render(model.state.recipe);
-    
+    //TEST
+  controlServings();
 
     //OOP---RecipeView method
   } catch (err) {
@@ -91,7 +92,7 @@ const controlPagination = function (goToPage) {
 
 const controlServings = function () {
   // Update recipe servings (in state)
-  model.updateServings(1);
+  model.updateServings(5);
 
   // Update the recipe view
   recipeView.render(model.state.recipe);
