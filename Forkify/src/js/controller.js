@@ -36,23 +36,19 @@ const controlRecipes = async function () {
     if (!id) return;
     //that is if no id, return to the normal state without any err
 
-    //Rendering Spinner (recipeView.js)
+    // 0) Rendering Spinner (recipeView.js)
     recipeView.renderSpinner();
     //Happens before and while API loads in bg
 
-    // 1.) Loading Recipe (model.js)
+    // 1) Loading Recipe (model.js)
     await model.loadRecipe(id); //loadRecipe param 'id' now === const id = window.location.hash.slice(1);
     //loadRecipe is an async func so its going to return a promise. We therefore need to await the promise before we can move on in the next step of the execution of the async function. **This current await statement does not return anything so we are not storing any result into a var
     //  const {recipe} =  model.state;
     //  const recipe = model.state.recipe
 
-    
-
-    // 2.) Rendering Recipe (model.js)
+    // 2) Rendering Recipe (model.js)
     // const recipeView = new recipeView(model.state.recipe)
     recipeView.render(model.state.recipe);
-    //TEST
-  controlServings();
 
     //OOP---RecipeView method
   } catch (err) {
@@ -90,19 +86,19 @@ const controlPagination = function (goToPage) {
   paginationView.render(model.state.search);
 };
 
-const controlServings = function () {
+const controlServings = function (newServings) {
   // Update recipe servings (in state)
-  model.updateServings(5);
+  model.updateServings(newServings);
 
   // Update the recipe view
   recipeView.render(model.state.recipe);
-  
-}
+  //console.log(model.state.recipe);
+};
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
-
 };
 init();
