@@ -12,6 +12,28 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  update(data) {
+    if (!data || (Array.isArray(data) && data.length === 0))
+      return this.renderError();
+    this._data = data;
+    const newMarkup = this._generateMarkup();
+
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    //So this basically creates a copy of the original entire DOM NODE List! So we can now compare this 'virtual' DOM to the actual DOM that is really on the page
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const curElements = Array.from(this._parentElement.querySelectorAll('*')); // So this is like the real DOM
+    //Array.from basically creates an array from iterables. Converts element to an Array
+    // console.log(curElements);
+    // console.log(newElements);
+
+    newElements.forEach((newEl, i) =>{
+      const curEl = curElements[i];
+      console.log(curEl, newEl.isEqualNode(curEl));
+      // the isEqualNode() method compares the content of curEl with newEl
+      
+    })
+  }
+
   _clear() {
     this._parentElement.innerHTML = '';
   }
