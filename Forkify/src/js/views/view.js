@@ -17,21 +17,27 @@ export default class View {
       return this.renderError();
     this._data = data;
     const newMarkup = this._generateMarkup();
-
-    const newDOM = document.createRange().createContextualFragment(newMarkup);
-    //So this basically creates a copy of the original entire DOM NODE List! So we can now compare this 'virtual' DOM to the actual DOM that is really on the page
+    const newDOM = document.createRange().createContextualFragment(newMarkup);//This creates a copy of the original recipe DOM NODE LIST. So we can now compare this 'virtual' DOM to the actual DOM that is really on the page
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this._parentElement.querySelectorAll('*')); // So this is like the real DOM
     //Array.from basically creates an array from iterables. Converts element to an Array
-    // console.log(curElements);
-    // console.log(newElements);
 
-    newElements.forEach((newEl, i) =>{
+    newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
-      console.log(curEl, newEl.isEqualNode(curEl));
-      // the isEqualNode() method compares the content of curEl with newEl
-      
-    })
+      //Runs this element together with newEl
+
+      //Updates changed TEXT: the isEqualNode() method compares the content of curEl with newEl
+      if (
+        !newEl.isEqualNode(curEl) &&
+        newEl.firstChild.nodeValue.trim() !== ''
+      ) {
+        curEl.textContent = newEl.textContent;
+      }
+
+      //Updates changed ATTRIBUTE
+      if (!newEl.isEqualNode(curEl))
+        Array.from(newEl.attributes).forEach(attr => curEl.setAttribute(attr.name, attr.value));
+    });
   }
 
   _clear() {
