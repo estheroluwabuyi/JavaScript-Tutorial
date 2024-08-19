@@ -36,9 +36,12 @@ const controlRecipes = async function () {
     if (!id) return;
     //that is if no id, return to the normal state without any err
 
-    // 0) Rendering Spinner (recipeView.js)
     recipeView.renderSpinner();
     //Happens before and while API loads in bg
+
+    // 0) Update results view to mark selected search result
+    resultsView.update(model.getSearchResultsPerPage());
+    // resultsView.render(model.getSearchResultsPerPage());
 
     // 1) Loading Recipe (model.js)
     await model.loadRecipe(id); //loadRecipe param 'id' now === const id = window.location.hash.slice(1);
@@ -53,6 +56,7 @@ const controlRecipes = async function () {
     //OOP---RecipeView method
   } catch (err) {
     recipeView.renderError();
+    console.log(err);
   }
 };
 
@@ -74,7 +78,9 @@ const controlSearchResults = async function () {
 
     // 4) Render the initial pagination btns
     paginationView.render(model.state.search);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const controlPagination = function (goToPage) {

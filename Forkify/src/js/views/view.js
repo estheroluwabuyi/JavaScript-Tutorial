@@ -13,11 +13,9 @@ export default class View {
   }
 
   update(data) {
-    if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
     this._data = data;
     const newMarkup = this._generateMarkup();
-    const newDOM = document.createRange().createContextualFragment(newMarkup);//This creates a copy of the original recipe DOM NODE LIST. So we can now compare this 'virtual' DOM to the actual DOM that is really on the page
+    const newDOM = document.createRange().createContextualFragment(newMarkup); //This creates a copy of the original recipe DOM NODE LIST. So we can now compare this 'virtual' DOM to the actual DOM that is really on the page
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this._parentElement.querySelectorAll('*')); // So this is like the real DOM
     //Array.from basically creates an array from iterables. Converts element to an Array
@@ -36,7 +34,9 @@ export default class View {
 
       //Updates changed ATTRIBUTE
       if (!newEl.isEqualNode(curEl))
-        Array.from(newEl.attributes).forEach(attr => curEl.setAttribute(attr.name, attr.value));
+        Array.from(newEl.attributes).forEach(attr =>
+          curEl.setAttribute(attr.name, attr.value)
+        );
     });
   }
 
