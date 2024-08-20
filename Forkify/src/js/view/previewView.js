@@ -1,16 +1,11 @@
 import View from './view';
 import icons from 'url:../../img/icons.svg';
 
-class ResultsView extends View {
-  _parentElement = document.querySelector('.results');
-  _errorMessage = `No recipes for your query! Please try again :)`;
-  _message = '';
+class PreviewView extends View {
+  _parentElement = '';
 
-  _generateMarkup() {
-    return this._data.map(this._generateMarkupPreview).join('');
-  }
-
-  _generateMarkupPreview(result) {
+ 
+  _generateMarkup(result) {
     const id = window.location.hash.slice(1);
     return `
         <li class="preview">
@@ -31,4 +26,4 @@ class ResultsView extends View {
   }
 }
 
-export default new ResultsView();
+export default new PreviewView();

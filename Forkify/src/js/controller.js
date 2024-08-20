@@ -1,9 +1,10 @@
 //Importing Others
 import * as model from './model.js'; //this would import everything from model.js
-import recipeView from './views/recipeView.js'; //default module
-import searchView from './views/searchView.js';
-import resultsView from './views/resultsView.js';
-import paginationView from './views/paginationView.js';
+import recipeView from './view/recipeView.js'; //default module
+import searchView from './view/searchView.js';
+import resultsView from './view/resultsView.js';
+import bookmarksView from './view/bookmarksView.js';
+import paginationView from './view/paginationView.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -18,7 +19,7 @@ if (module.hot) {
 // importing packages
 import 'core-js/stable'; //Polyfilling js features like Promise,Array.from, Object.assign,
 import 'regenerator-runtime/runtime'; //Polyfilling async/await
-import searchView from './views/searchView.js';
+import searchView from './view/searchView.js';
 // import recipeView from './views/recipeView.js';
 
 ///////////////////
@@ -42,6 +43,8 @@ const controlRecipes = async function () {
     // 0) Update results view to mark selected search result
     resultsView.update(model.getSearchResultsPerPage());
     // resultsView.render(model.getSearchResultsPerPage());
+
+    bookmarksView.update(model.state.bookmarks)
 
     // 1) Loading Recipe (model.js)
     await model.loadRecipe(id); //loadRecipe param 'id' now === const id = window.location.hash.slice(1);
@@ -109,6 +112,9 @@ const controlAddBookmark = function () {
 
   // 2) Update recipe view
   recipeView.update(model.state.recipe);
+
+  // 3) Render bookmarks
+  bookmarksView.render(model.state.bookmarks)
 };
 
 
