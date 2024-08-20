@@ -27,8 +27,9 @@ export default class View {
       //Updates changed TEXT: the isEqualNode() method compares the content of curEl with newEl
       if (
         !newEl.isEqualNode(curEl) &&
-        newEl.firstChild.nodeValue.trim() !== ''
+        newEl.firstChild?.nodeValue.trim() !== ''
       ) {
+        // console.log('💥', newEl.firstChild.nodeValue.trim());
         curEl.textContent = newEl.textContent;
       }
 
