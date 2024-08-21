@@ -44,8 +44,6 @@ const controlRecipes = async function () {
     resultsView.update(model.getSearchResultsPerPage());
     // resultsView.render(model.getSearchResultsPerPage());
 
-    bookmarksView.update(model.state.bookmarks);
-
     // 1) Loading Recipe (model.js)
     await model.loadRecipe(id); //loadRecipe param 'id' now === const id = window.location.hash.slice(1);
     //loadRecipe is an async func so its going to return a promise. We therefore need to await the promise before we can move on in the next step of the execution of the async function. **This current await statement does not return anything so we are not storing any result into a var
@@ -56,10 +54,14 @@ const controlRecipes = async function () {
     // const recipeView = new recipeView(model.state.recipe)
     recipeView.render(model.state.recipe);
 
+    // 3) Updating bookmarksView
+    debugger;
+    bookmarksView.update(model.state.bookmarks);
+
     //OOP---RecipeView method
   } catch (err) {
     recipeView.renderError();
-    console.log(err);
+    console.error(err);
   }
 };
 
