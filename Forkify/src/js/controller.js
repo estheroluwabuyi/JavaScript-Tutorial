@@ -44,7 +44,7 @@ const controlRecipes = async function () {
     resultsView.update(model.getSearchResultsPerPage());
     // resultsView.render(model.getSearchResultsPerPage());
 
-    bookmarksView.update(model.state.bookmarks)
+    bookmarksView.update(model.state.bookmarks);
 
     // 1) Loading Recipe (model.js)
     await model.loadRecipe(id); //loadRecipe param 'id' now === const id = window.location.hash.slice(1);
@@ -114,14 +114,13 @@ const controlAddBookmark = function () {
   recipeView.update(model.state.recipe);
 
   // 3) Render bookmarks
-  bookmarksView.render(model.state.bookmarks)
+  bookmarksView.render(model.state.bookmarks);
 };
-
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
-  recipeView.addHandlerAddBookmark(controlAddBookmark)
+  recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 };
