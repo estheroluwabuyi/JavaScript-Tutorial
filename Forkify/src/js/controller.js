@@ -5,6 +5,7 @@ import searchView from './view/searchView.js';
 import resultsView from './view/resultsView.js';
 import bookmarksView from './view/bookmarksView.js';
 import paginationView from './view/paginationView.js';
+import addRecipeView from './view/addRecipeView.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -20,6 +21,7 @@ if (module.hot) {
 import 'core-js/stable'; //Polyfilling js features like Promise,Array.from, Object.assign,
 import 'regenerator-runtime/runtime'; //Polyfilling async/await
 import searchView from './view/searchView.js';
+import addRecipeView from './view/addRecipeView.js';
 // import recipeView from './views/recipeView.js';
 
 ///////////////////
@@ -123,6 +125,13 @@ const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 }
 
+const controlAddRecipe = function (newRecipe) {
+  console.log(newRecipe);
+
+  //Upload the new recipe data
+  
+};
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
@@ -130,5 +139,6 @@ const init = function () {
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
 };
 init();
